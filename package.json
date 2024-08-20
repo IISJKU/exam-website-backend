@@ -1,0 +1,19 @@
+{
+  "name": "exam-website-backend",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://git@github.com/IISJKU/exam-website-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IISJKU/exam-website-backend/issues"
+  },
+  "homepage": "https://github.com/IISJKU/exam-website-backend#readme",
+  "description": ""
+}
