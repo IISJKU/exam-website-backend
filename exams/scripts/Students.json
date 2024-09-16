@@ -1,0 +1,40 @@
+[
+  {
+    "first_name": "Luis",
+    "last_name": "Punz",
+    "email": "maxpunz12345@gmail.com",
+    "phone": "0123411134",
+    "emergency_contact": "354234513834",
+    "matrikel_number": "ak12349",
+    "bouns_time": "1.30",
+    "misc": ""
+  },
+  {"first_name": "Reinhard",
+    "last_name": "Koutny",
+    "email": "ReinhardKoutney@gmail.com",
+    "phone": "04532532525",
+    "emergency_contact": "354234513934",
+    "matrikel_number": "ak1235",
+    "bouns_time": "1.20",
+    "misc": ""
+  },
+  { "first_name": "Elina",
+    "last_name": "Gharbieh",
+    "email": "EEGharbieh@gmail.com",
+    "phone": "0123411132",
+    "emergency_contact": "3542421137734",
+    "matrikel_number": "ak1236",
+    "bouns_time": "1.30",
+    "misc": ""
+  },
+  {
+    "first_name": "Isam",
+    "last_name": "Diab",
+    "email": "IsamDiab@gmail.com",
+    "phone": "012324234",
+    "emergency_contact": "35324513304",
+    "matrikel_number": "ak1237",
+    "bouns_time": "1.60",
+    "misc": ""
+  }
+]

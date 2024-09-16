@@ -1,0 +1,18 @@
+[
+  {
+    "first_name": "Pax",
+    "last_name": "Munz",
+    "email": "tutor1@gmail.com",
+    "phone": "0123411123",
+    "matrikel_number": "ak223489",
+    "course": "MTD"
+  },
+  {
+    "first_name": "Kreinhard",
+    "last_name": "Rutny",
+    "email": "tutor2@gmail.com",
+    "phone": "0123433134",
+    "matrikel_number": "ak2234556",
+    "course": "Informatics"
+  }
+]

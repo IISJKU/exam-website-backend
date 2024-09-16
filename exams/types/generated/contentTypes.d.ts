@@ -788,6 +788,156 @@ export interface PluginI18NLocale extends Schema.CollectionType {
   };
 }
 
+export interface ApiExamExam extends Schema.CollectionType {
+  collectionName: 'exams';
+  info: {
+    singularName: 'exam';
+    pluralName: 'exams';
+    displayName: 'Exam';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    title: Attribute.String & Attribute.Required;
+    date: Attribute.DateTime & Attribute.Required;
+    duration: Attribute.Integer & Attribute.Required;
+    student: Attribute.Relation<
+      'api::exam.exam',
+      'oneToOne',
+      'api::student.student'
+    >;
+    tutor: Attribute.Relation<'api::exam.exam', 'oneToOne', 'api::tutor.tutor'>;
+    examiner: Attribute.Relation<
+      'api::exam.exam',
+      'manyToOne',
+      'api::examiner.examiner'
+    >;
+    major: Attribute.String;
+    institute: Attribute.String;
+    mode: Attribute.String & Attribute.Required;
+    lva_num: Attribute.Decimal & Attribute.Required;
+    status: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiExaminerExaminer extends Schema.CollectionType {
+  collectionName: 'examiners';
+  info: {
+    singularName: 'examiner';
+    pluralName: 'examiners';
+    displayName: 'Examiner';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    first_name: Attribute.String & Attribute.Required;
+    last_name: Attribute.String & Attribute.Required;
+    phone: Attribute.BigInteger;
+    email: Attribute.Email;
+    exams: Attribute.Relation<
+      'api::examiner.examiner',
+      'oneToMany',
+      'api::exam.exam'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::examiner.examiner',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::examiner.examiner',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiStudentStudent extends Schema.CollectionType {
+  collectionName: 'students';
+  info: {
+    singularName: 'student';
+    pluralName: 'students';
+    displayName: 'Student';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    first_name: Attribute.String & Attribute.Required;
+    last_name: Attribute.String & Attribute.Required;
+    email: Attribute.Email & Attribute.Required & Attribute.Unique;
+    phone: Attribute.BigInteger;
+    emergency_contact: Attribute.BigInteger;
+    matrikel_number: Attribute.String & Attribute.Required & Attribute.Unique;
+    bouns_time: Attribute.Decimal;
+    misc: Attribute.Text;
+    photo: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::student.student',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::student.student',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTutorTutor extends Schema.CollectionType {
+  collectionName: 'tutors';
+  info: {
+    singularName: 'tutor';
+    pluralName: 'tutors';
+    displayName: 'Tutor';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    first_name: Attribute.String & Attribute.Required;
+    last_name: Attribute.String & Attribute.Required;
+    email: Attribute.Email & Attribute.Required & Attribute.Unique;
+    phone: Attribute.BigInteger & Attribute.Required & Attribute.Unique;
+    matrikel_number: Attribute.String & Attribute.Required & Attribute.Unique;
+    course: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::tutor.tutor',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::tutor.tutor',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -806,6 +956,10 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
+      'api::exam.exam': ApiExamExam;
+      'api::examiner.examiner': ApiExaminerExaminer;
+      'api::student.student': ApiStudentStudent;
+      'api::tutor.tutor': ApiTutorTutor;
     }
   }
 }

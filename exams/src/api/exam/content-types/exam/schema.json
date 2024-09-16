@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exams",
+  "info": {
+    "singularName": "exam",
+    "pluralName": "exams",
+    "displayName": "Exam",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "date": {
+      "type": "datetime",
+      "required": true
+    },
+    "duration": {
+      "type": "integer",
+      "required": true
+    },
+    "student": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::student.student"
+    },
+    "tutor": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::tutor.tutor"
+    },
+    "examiner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::examiner.examiner",
+      "inversedBy": "exams"
+    },
+    "major": {
+      "type": "string"
+    },
+    "institute": {
+      "type": "string"
+    },
+    "mode": {
+      "type": "string",
+      "required": true
+    },
+    "lva_num": {
+      "type": "decimal",
+      "required": true
+    },
+    "status": {
+      "type": "string"
+    }
+  }
+}

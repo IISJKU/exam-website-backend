@@ -1,0 +1,281 @@
+[
+  {
+    "title": "PunzElektrotechnik0608",
+    "date": "2024-10-06T08:30:00.000Z",
+    "duration": 330,
+    "student": 1,
+    "tutor": 2,
+    "major": "Elektrotechnik",
+    "institute": "IIS",
+    "mode": "online",
+    "examiner":2
+  },
+  {
+    "title": "PunzIIS0608",
+    "date": "2024-10-06T12:00:00.000Z",
+    "duration": 90,
+    "student": 3,
+    "tutor": 2,
+    "major": "Media Technology",
+    "institute": "IIS",
+    "mode": "online",
+    "examiner":1
+  },
+
+  {
+    "title": "PunzThirdExam0608",
+    "date": "2024-10-06T11:00:00.000Z",
+    "duration": 360,
+    "student": 1,
+    "tutor": 2,
+    "major": "Third Exam",
+    "institute": "IIS",
+    "mode": "online",
+    "examiner":1
+  },
+
+  {
+    "title": "KoutnyInformatics1234",
+    "date": "2024-12-31T11:15:00.000Z",
+    "duration": 60,
+    "student": 3,
+    "tutor": 3,
+    "major": "Informatics",
+    "institute": "Software",
+    "mode": "Open book",
+    "examiner":2
+  },
+  {
+    "title": "KoutnyHardwaredesign1243",
+    "date": "2024-10-31T14:30:00.000Z",
+    "duration": 90,
+    "student": 2,
+    "tutor": 1,
+    "major": "Hardwaredesign",
+    "institute": "Software",
+    "mode": "Open book",
+    "examiner":2
+  },
+  {
+    "title": "1KoutnyDatamining1243",
+    "date": "2024-10-21T09:00:00.000Z",
+    "duration": 120,
+    "student": 2,
+    "tutor": 1,
+    "major": "Datamining1243",
+    "institute": "Software",
+    "mode": "Open book",
+    "examiner":2
+  },
+  {
+    "title": "2KoutnyDatamining1555",
+    "date": "2024-10-21T09:30:00.000Z",
+    "duration": 120,
+    "student": 4,
+    "tutor": 1,
+    "major": "Datamining1243",
+    "institute": "Software",
+    "mode": "Open book",
+    "examiner":2
+  },
+  {
+    "title": "3KoutnyDatamining1555",
+    "date": "2024-10-21T10:30:00.000Z",
+    "duration": 120,
+    "student": 4,
+    "tutor": 1,
+    "major": "Datamining1243",
+    "institute": "Software",
+    "mode": "Open book",
+    "examiner":2
+  },
+  {
+    "title": "GharbiehSoftwareDevelopment0608",
+    "date": "2024-10-07T14:15:00.000Z",
+    "duration": 150,
+    "student": 5,
+    "tutor": 3,
+    "major": "Software Development",
+    "institute": "Software",
+    "mode": "Open book",
+    "examiner":1
+  },
+  {
+    "title": "GharbiehWebdesign0608",
+    "date": "2024-10-25T15:30:00.000Z",
+    "duration": 120,
+    "student": 5,
+    "tutor": 1,
+    "major": "Webdesign",
+    "institute": "Software",
+    "mode": "Open book",
+    "examiner":1
+  },
+  {
+    "title": "GharbiehSoftwareAccessibility0608",
+    "date": "2024-10-14T19:30:00.000Z",
+    "duration": 90,
+    "student": 6,
+    "tutor": 3,
+    "major": "Software Accessibility",
+    "institute": "Software",
+    "mode": "Open book",
+    "examiner":1
+  },
+  {
+    "title": "DiabAI0608",
+    "date": "2024-10-13T17:15:00.000Z",
+    "duration": 60,
+    "student": 6,
+    "tutor": 1,
+    "major": "Artificial Intelligence I",
+    "institute": "Linguistics",
+    "mode": "online",
+    "examiner":1
+  },
+
+  {
+    "title": "Punzasd0608",
+    "date": "2024-09-19T11:00:00.000Z",
+    "duration": 360,
+    "student": 2,
+    "tutor": 3,
+    "major": "Third Exam",
+    "institute": "IIS",
+    "mode": "online",
+    "examiner":1
+  },
+
+  {
+    "title": "KoutnyInformatics13242",
+    "date": "2024-09-20T11:15:00.000Z",
+    "duration": 60,
+    "student": 1,
+    "tutor": 2,
+    "major": "Informatics",
+    "institute": "Software",
+    "mode": "Open book",
+    "examiner":1
+  },
+  {
+    "title": "KoutnyHardwaredesign11",
+    "date": "2024-09-26T14:30:00.000Z",
+    "duration": 90,
+    "student": 2,
+    "tutor": 1,
+    "major": "Hardwaredesign",
+    "institute": "Software",
+    "mode": "Moodle",
+    "examiner":1
+  },
+  {
+    "title": "1KoutnyDatamining1243",
+    "date": "2024-09-22T10:00:00.000Z",
+    "duration": 120,
+    "student": 3,
+    "tutor": 4,
+    "major": "Datamining1243",
+    "institute": "Software",
+    "mode": "Moodle",
+    "examiner":1
+  },
+  {
+    "title": "2KoutnyDatamining1555",
+    "date": "2024-09-23T09:30:00.000Z",
+    "duration": 120,
+    "student": 4,
+    "tutor": 4,
+    "major": "Datamining1243",
+    "institute": "Software",
+    "mode": "Moodle",
+    "examiner":2
+  },
+  {
+    "title": "3KoutnyDatamining1555",
+    "date": "2024-09-23T10:30:00.000Z",
+    "duration": 120,
+    "student": 5,
+    "tutor": 4,
+    "major": "Datamining1243",
+    "institute": "Software",
+    "mode": "Moodle",
+    "examiner":2
+  },
+  {
+    "title": "GharbiehSoftwareDevelopment0608",
+    "date": "2024-09-08T14:15:00.000Z",
+    "duration": 150,
+    "student": 6,
+    "tutor": 2,
+    "major": "Software Development",
+    "institute": "Software",
+    "mode": "Present",
+    "examiner":1
+  },
+  {
+    "title": "GharbiehWebdesign0608",
+    "date": "2024-09-24T15:30:00.000Z",
+    "duration": 120,
+    "student": 1,
+    "tutor": 4,
+    "major": "Webdesign",
+    "institute": "Software",
+    "mode": "Present",
+    "examiner":1
+  },
+  {
+    "title": "GharbiehSoftwareAccessibility0608",
+    "date": "2024-09-18T19:30:00.000Z",
+    "duration": 90,
+    "student": 2,
+    "tutor": 2,
+    "major": "Software Accessibility",
+    "institute": "Software",
+    "mode": "Present",
+    "examiner":1
+  },
+  {
+    "title": "DiabAI0608",
+    "date": "2024-09-11T17:15:00.000Z",
+    "duration": 60,
+    "student": 3,
+    "tutor": 4,
+    "major": "Artificial Intelligence I",
+    "institute": "Linguistics",
+    "mode": "Present",
+    "examiner":2
+  },
+  {
+    "title": "DiabAI0609",
+    "date": "2024-09-11T17:15:00.000Z",
+    "duration": 60,
+    "student": 4,
+    "tutor": 4,
+    "major": "Artificial Intelligence I",
+    "institute": "Linguistics",
+    "mode": "Present",
+    "examiner":2
+  },
+  {
+    "title": "DiabAI0610",
+    "date": "2024-09-12T17:15:00.000Z",
+    "duration": 60,
+    "student": 5,
+    "tutor": 4,
+    "major": "Artificial Intelligence II",
+    "institute": "Linguistics",
+    "mode": "Moodle",
+    "examiner":2
+  },
+  {
+    "title": "DiabAI0611",
+    "date": "2024-09-13T17:15:00.000Z",
+    "duration": 60,
+    "student": 6,
+    "tutor": 1,
+    "major": "Artificial Intelligence III",
+    "institute": "Linguistics",
+    "mode": "Moodle",
+    "examiner":1
+  }
+]

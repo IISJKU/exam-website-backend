@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "examiners",
+  "info": {
+    "singularName": "examiner",
+    "pluralName": "examiners",
+    "displayName": "Examiner"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "first_name": {
+      "type": "string",
+      "required": true
+    },
+    "last_name": {
+      "type": "string",
+      "required": true
+    },
+    "phone": {
+      "type": "biginteger"
+    },
+    "email": {
+      "type": "email"
+    },
+    "exams": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exam.exam",
+      "mappedBy": "examiner"
+    }
+  }
+}
