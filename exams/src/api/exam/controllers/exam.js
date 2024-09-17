@@ -21,7 +21,7 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
                 fields: ['first_name', 'last_name']
             }
         };
-        const { data, meta } = await super.find(ctx);
+        const { data } = await super.find(ctx);
 
         // Helper function to extract only values from an object
         const extractValues = (obj) => Object.values(obj);
@@ -51,11 +51,11 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
             },
         }));
   
-        return { data: newData, meta };
+        return { data: newData };
     },
 
     // Override the default findOne method
-    async findOne(ctx) {
+    async update(ctx) {
         const { id } = ctx.params;  // Assuming the ID of the entity to fetch is provided in the URL
 
         ctx.query.populate = {
@@ -75,7 +75,7 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
         const extractValues = (obj) => Object.values(obj);
 
         // Call the default findOne to get the entity by ID
-        const { data } = await super.findOne(ctx);
+        const { data } = await super.update(ctx);
 
         // Process the response just like the 'find' method
         const newData = {
