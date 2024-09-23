@@ -13,6 +13,7 @@ const importStudents = async () => {
         console.log('Starting the import script...');
 
         // Start Strapi instance
+        // @ts-ignore
         const app = await strapi().load();
     
         // Load the JSON file
@@ -31,7 +32,7 @@ const importStudents = async () => {
             phone: entry.phone,
             emergency_contact: entry.emergency_contact,
             matrikel_number: entry.matrikel_number,
-            bouns_time: entry.bouns_time,
+            bonus_time: entry.bonus_time,
             misc:entry.misc,
             exams: null
             }

@@ -36,7 +36,7 @@
       "required": true,
       "unique": true
     },
-    "bouns_time": {
+    "bonus_time": {
       "type": "decimal"
     },
     "misc": {

@@ -883,7 +883,7 @@ export interface ApiStudentStudent extends Schema.CollectionType {
     phone: Attribute.BigInteger;
     emergency_contact: Attribute.BigInteger;
     matrikel_number: Attribute.String & Attribute.Required & Attribute.Unique;
-    bouns_time: Attribute.Decimal;
+    bonus_time: Attribute.Decimal;
     misc: Attribute.Text;
     photo: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     createdAt: Attribute.DateTime;

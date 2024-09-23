@@ -6,7 +6,7 @@
     "phone": "0123411134",
     "emergency_contact": "354234513834",
     "matrikel_number": "ak12349",
-    "bouns_time": "1.30",
+    "bonus_time": "1.30",
     "misc": ""
   },
   {"first_name": "Reinhard",
@@ -15,7 +15,7 @@
     "phone": "04532532525",
     "emergency_contact": "354234513934",
     "matrikel_number": "ak1235",
-    "bouns_time": "1.20",
+    "bonus_time": "1.20",
     "misc": ""
   },
   { "first_name": "Elina",
@@ -24,7 +24,7 @@
     "phone": "0123411132",
     "emergency_contact": "3542421137734",
     "matrikel_number": "ak1236",
-    "bouns_time": "1.30",
+    "bonus_time": "1.30",
     "misc": ""
   },
   {
@@ -34,7 +34,7 @@
     "phone": "012324234",
     "emergency_contact": "35324513304",
     "matrikel_number": "ak1237",
-    "bouns_time": "1.60",
+    "bonus_time": "1.60",
     "misc": ""
   }
 ]
