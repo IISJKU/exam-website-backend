@@ -29,10 +29,10 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
         // Helper function to embed 'id' in 'attributes' of related items
         const embedIdInAttributes = (entry) => ({
             // id: entry.id,
-            // attributes: {
-            //    id: entry.id,  // Embed the 'id' into 'attributes'
+            attributes: {
+                id: entry.id,  // Embed the 'id' into 'attributes'
             ...entry.attributes,
-            // },
+            },
         });
  
         // Process the main entity and its populated relations
@@ -45,9 +45,9 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
                 student: entry.attributes.student ? entry.attributes.student.data.attributes.matrikel_number : null,
                 examiner: entry.attributes.examiner ? extractValues(entry.attributes.examiner.data.attributes) : null,
                 student_misc: entry.attributes.student ? entry.attributes.student.data.attributes.misc : null,
-                tutor_id: entry.attributes.tutor ? entry.attributes.tutor.data.tutor_id : null,
-                student_id: entry.attributes.student ? entry.attributes.student.data.attributes.student_id : null,
-                examiner_id: entry.attributes.examiner ? entry.attributes.examiner.data.attributes.examiner_id : null,
+                tutor_id: entry.attributes.tutor ? entry.attributes.tutor.data.id : null,
+                student_id: entry.attributes.student ? entry.attributes.student.data.id : null,
+                examiner_id: entry.attributes.examiner ? entry.attributes.examiner.data.id : null,
             },
         }));
   
