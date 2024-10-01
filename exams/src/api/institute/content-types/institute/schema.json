@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "institutes",
+  "info": {
+    "singularName": "institute",
+    "pluralName": "institutes",
+    "displayName": "Institute",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "abbreviation": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "faculty": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "department": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "exam_modes",
+  "info": {
+    "singularName": "exam-mode",
+    "pluralName": "exam-modes",
+    "displayName": "ExamMode",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "blocks"
+    }
+  }
+}

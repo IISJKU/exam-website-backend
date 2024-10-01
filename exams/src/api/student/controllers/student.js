@@ -28,7 +28,8 @@ module.exports = createCoreController('api::student.student', ({ strapi }) => ({
            attributes: {
               id: entry.id, // Embed the main entity's id into its attributes
               ...entry.attributes,
-              //exams: entry.attributes.exams ? entry.attributes.exams.data.map(embedIdInAttributes) : [],  // Handle many-to-many exams relations 
+              major: entry.attributes.major ? entry.attributes.major.data.attributes.name : null, 
+              major_id: entry.attributes.major ? entry.attributes.major.data.id : null, 
            },
        }));
   
@@ -43,12 +44,22 @@ module.exports = createCoreController('api::student.student', ({ strapi }) => ({
 
     // Call the default findOne to get the entity by ID
     const { data } = await super.update(ctx);
+     // Helper function to embed 'id' in 'attributes' of related items
+     const embedIdInAttributes = (entry) => ({
+      // id: entry.id,
+       attributes: {
+           id: entry.id,  // Embed the 'id' into 'attributes'
+           ...entry.attributes,
+       },
+   });
 
     // Process the response just like the 'find' method
     const newData = {
       attributes: {
           id: data.id,  // Embed the main entity's id into its attributes
-          ...data.attributes,
+        ...data.attributes,
+        major: data.attributes.major ? data.attributes.major.data.attributes.name : null,
+        major_id: data.attributes.major ? data.attributes.major.data.id : null,
       },
   };
 

@@ -40,22 +40,27 @@
       "target": "api::examiner.examiner",
       "inversedBy": "exams"
     },
-    "major": {
-      "type": "string"
-    },
-    "institute": {
-      "type": "string"
-    },
-    "mode": {
-      "type": "string",
-      "required": true
-    },
     "lva_num": {
       "type": "decimal",
       "required": true
     },
     "status": {
       "type": "string"
+    },
+    "exam_mode": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::exam-mode.exam-mode"
+    },
+    "institute": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::institute.institute"
+    },
+    "room": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::room.room"
     }
   }
 }

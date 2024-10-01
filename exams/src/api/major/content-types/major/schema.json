@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "majors",
+  "info": {
+    "singularName": "major",
+    "pluralName": "majors",
+    "displayName": "Major",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "abbreviation": {
+      "type": "string",
+      "required": false
+    },
+    "faculty": {
+      "type": "string"
+    }
+  }
+}

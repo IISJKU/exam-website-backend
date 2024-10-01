@@ -814,16 +814,55 @@ export interface ApiExamExam extends Schema.CollectionType {
       'manyToOne',
       'api::examiner.examiner'
     >;
-    major: Attribute.String;
-    institute: Attribute.String;
-    mode: Attribute.String & Attribute.Required;
     lva_num: Attribute.Decimal & Attribute.Required;
     status: Attribute.String;
+    exam_mode: Attribute.Relation<
+      'api::exam.exam',
+      'oneToOne',
+      'api::exam-mode.exam-mode'
+    >;
+    institute: Attribute.Relation<
+      'api::exam.exam',
+      'oneToOne',
+      'api::institute.institute'
+    >;
+    room: Attribute.Relation<'api::exam.exam', 'oneToOne', 'api::room.room'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &
       Attribute.Private;
     updatedBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiExamModeExamMode extends Schema.CollectionType {
+  collectionName: 'exam_modes';
+  info: {
+    singularName: 'exam-mode';
+    pluralName: 'exam-modes';
+    displayName: 'ExamMode';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    description: Attribute.Blocks;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::exam-mode.exam-mode',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::exam-mode.exam-mode',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -865,6 +904,98 @@ export interface ApiExaminerExaminer extends Schema.CollectionType {
   };
 }
 
+export interface ApiInstituteInstitute extends Schema.CollectionType {
+  collectionName: 'institutes';
+  info: {
+    singularName: 'institute';
+    pluralName: 'institutes';
+    displayName: 'Institute';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    abbreviation: Attribute.String;
+    email: Attribute.Email;
+    faculty: Attribute.String;
+    city: Attribute.String;
+    department: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::institute.institute',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::institute.institute',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiMajorMajor extends Schema.CollectionType {
+  collectionName: 'majors';
+  info: {
+    singularName: 'major';
+    pluralName: 'majors';
+    displayName: 'Major';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    abbreviation: Attribute.String;
+    faculty: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::major.major',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::major.major',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiRoomRoom extends Schema.CollectionType {
+  collectionName: 'rooms';
+  info: {
+    singularName: 'room';
+    pluralName: 'rooms';
+    displayName: 'Room';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    building: Attribute.String;
+    capacity: Attribute.Integer & Attribute.Required;
+    location: Attribute.String;
+    isAvailable: Attribute.Boolean & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::room.room', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::room.room', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
 export interface ApiStudentStudent extends Schema.CollectionType {
   collectionName: 'students';
   info: {
@@ -886,6 +1017,11 @@ export interface ApiStudentStudent extends Schema.CollectionType {
     bonus_time: Attribute.Decimal;
     misc: Attribute.Text;
     photo: Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    major: Attribute.Relation<
+      'api::student.student',
+      'oneToOne',
+      'api::major.major'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -957,7 +1093,11 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
       'api::exam.exam': ApiExamExam;
+      'api::exam-mode.exam-mode': ApiExamModeExamMode;
       'api::examiner.examiner': ApiExaminerExaminer;
+      'api::institute.institute': ApiInstituteInstitute;
+      'api::major.major': ApiMajorMajor;
+      'api::room.room': ApiRoomRoom;
       'api::student.student': ApiStudentStudent;
       'api::tutor.tutor': ApiTutorTutor;
     }

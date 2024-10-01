@@ -12,13 +12,27 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
         ctx.query.populate = {
             // @ts-ignore
             student: {
-                fields: ['matrikel_number', 'misc']  // Return only 'matrikel_number' field from 'student'
+                fields: ['matrikel_number', 'misc'],
+                populate: {
+                    major: {
+                        fields: ['name']  // Specify the major fields to populate
+                    }
+                }
             },
             tutor: {
                 fields: ['first_name', 'last_name']
             },
             examiner: {
                 fields: ['first_name', 'last_name']
+            },
+            exam_mode: {
+                fields: ['name']
+            },
+            institute: {
+                fields: ['name', 'abbreviation']
+            },
+            room: {
+                fields: ['name']
             }
         };
         const { data } = await super.find(ctx);
@@ -44,10 +58,18 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
                 tutor: entry.attributes.tutor ? extractValues(entry.attributes.tutor.data.attributes) : null,
                 student: entry.attributes.student ? entry.attributes.student.data.attributes.matrikel_number : null,
                 examiner: entry.attributes.examiner ? extractValues(entry.attributes.examiner.data.attributes) : null,
+                exam_mode: entry.attributes.exam_mode ? entry.attributes.exam_mode.data.attributes.name : null,
+                institute: entry.attributes.institute ? entry.attributes.institute.data.attributes.abbreviation : null,
                 student_misc: entry.attributes.student ? entry.attributes.student.data.attributes.misc : null,
+                major: entry.attributes.student ? entry.attributes.student.data.attributes.major.data.attributes.name : null,
+                room: entry.attributes.room ? entry.attributes.room.data.attributes.name : null,
                 tutor_id: entry.attributes.tutor ? entry.attributes.tutor.data.id : null,
                 student_id: entry.attributes.student ? entry.attributes.student.data.id : null,
                 examiner_id: entry.attributes.examiner ? entry.attributes.examiner.data.id : null,
+                major_id: entry.attributes.student.data.attributes.major ? entry.attributes.student.data.attributes.major.data.id : null,
+                institute_id: entry.attributes.institute ? entry.attributes.institute.data.id : null,
+                mode_id: entry.attributes.exam_mode ? entry.attributes.exam_mode.data.id : null,
+                room_id: entry.attributes.room ? entry.attributes.room.data.id : null,
             },
         }));
   
@@ -61,14 +83,28 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
         ctx.query.populate = {
             // @ts-ignore
             student: {
-                fields: ['matrikel_number', 'misc'],  // Return only 'matrikel_number' and 'misc' from 'student'
+                fields: ['matrikel_number', 'misc'],
+                populate: {
+                    major: {
+                        fields: ['name']  // Specify the major fields to populate
+                    }
+                }
             },
             tutor: {
-                fields: ['first_name', 'last_name'],
+                fields: ['first_name', 'last_name']
             },
             examiner: {
-                fields: ['first_name', 'last_name'],
+                fields: ['first_name', 'last_name']
             },
+            exam_mode: {
+                fields: ['name']
+            },
+            institute: {
+                fields: ['name', 'abbreviation']
+            },
+            room: {
+                fields: ['name']
+            }
         };
 
         // Helper function to extract only values from an object
@@ -85,10 +121,18 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
                 tutor: data.attributes.tutor ? extractValues(data.attributes.tutor.data.attributes) : null,
                 student: data.attributes.student ? data.attributes.student.data.attributes.matrikel_number : null,
                 examiner: data.attributes.examiner ? extractValues(data.attributes.examiner.data.attributes) : null,
+                exam_mode: data.attributes.exam_mode ? data.attributes.exam_mode.data.attributes.name : null,
+                institute: data.attributes.institute ? data.attributes.institute.data.attributes.abbreviation : null,
                 student_misc: data.attributes.student ? data.attributes.student.data.attributes.misc : null,
+                room: data.attributes.room ? data.attributes.room.data.attributes.name : null,
+                major: data.attributes.student ? data.attributes.student.data.attributes.major.data.attributes.name : null,
                 tutor_id: data.attributes.tutor ? data.attributes.tutor.data.id : null,
                 student_id: data.attributes.student ? data.attributes.student.data.id : null,
                 examiner_id: data.attributes.examiner ? data.attributes.examiner.data.id : null,
+                major_id: data.attributes.student.data.attributes.major ? data.attributes.student.data.attributes.major.data.id : null,
+                institute_id: data.attributes.institute ? data.attributes.institute.data.id : null,
+                mode_id: data.attributes.exam_mode ? data.attributes.exam_mode.data.id : null,
+                room_id: data.attributes.room ? data.attributes.room.data.id : null,
             },
         };
 

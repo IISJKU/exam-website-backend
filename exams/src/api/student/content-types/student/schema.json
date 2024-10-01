@@ -52,6 +52,11 @@
         "videos",
         "audios"
       ]
+    },
+    "major": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::major.major"
     }
   }
 }
