@@ -43,26 +43,26 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
         // Helper function to embed 'id' in 'attributes' of related items
         const embedIdInAttributes = (entry) => ({
             // id: entry.id,
-            attributes: {
+           // attributes: {
                 id: entry.id,  // Embed the 'id' into 'attributes'
             ...entry.attributes,
-            },
+            //},
         });
  
         // Process the main entity and its populated relations
         const newData = data.map((entry) => ({
             //id: entry.id,
-            attributes: {
+           // attributes: {
                 id: entry.id, // Embed the main entity's id into its attributes
                 ...entry.attributes,
-                tutor: entry.attributes.tutor ? extractValues(entry.attributes.tutor.data.attributes) : null,
-                student: entry.attributes.student ? entry.attributes.student.data.attributes.matrikel_number : null,
-                examiner: entry.attributes.examiner ? extractValues(entry.attributes.examiner.data.attributes) : null,
-                exam_mode: entry.attributes.exam_mode ? entry.attributes.exam_mode.data.attributes.name : null,
-                institute: entry.attributes.institute ? entry.attributes.institute.data.attributes.abbreviation : null,
+                tutor: entry.attributes.tutor ? embedIdInAttributes(entry.attributes.tutor.data) : null,
+                student: entry.attributes.student ? embedIdInAttributes(entry.attributes.student.data) : null,
+                examiner: entry.attributes.examiner ? embedIdInAttributes(entry.attributes.examiner.data) : null,
+                exam_mode: entry.attributes.exam_mode ? embedIdInAttributes(entry.attributes.exam_mode.data) : null,
+                institute: entry.attributes.institute ? embedIdInAttributes(entry.attributes.institute.data) : null,
                 student_misc: entry.attributes.student ? entry.attributes.student.data.attributes.misc : null,
-                major: entry.attributes.student ? entry.attributes.student.data.attributes.major.data.attributes.name : null,
-                room: entry.attributes.room ? entry.attributes.room.data.attributes.name : null,
+                major: entry.attributes.student ? embedIdInAttributes(entry.attributes.student.data.attributes.major.data) : null,
+                room: entry.attributes.room ? embedIdInAttributes(entry.attributes.room.data) : null,
                 tutor_id: entry.attributes.tutor ? entry.attributes.tutor.data.id : null,
                 student_id: entry.attributes.student ? entry.attributes.student.data.id : null,
                 examiner_id: entry.attributes.examiner ? entry.attributes.examiner.data.id : null,
@@ -70,10 +70,10 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
                 institute_id: entry.attributes.institute ? entry.attributes.institute.data.id : null,
                 mode_id: entry.attributes.exam_mode ? entry.attributes.exam_mode.data.id : null,
                 room_id: entry.attributes.room ? entry.attributes.room.data.id : null,
-            },
+         //   },
         }));
   
-        return { data: newData };
+        return newData;
     },
 
     // Override the default findOne method
@@ -113,19 +113,27 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
         // Call the default findOne to get the entity by ID
         const { data } = await super.update(ctx);
 
-        // Process the response just like the 'find' method
+         // Helper function to embed 'id' in 'attributes' of related items
+         const embedIdInAttributes = (entry) => ({
+            // id: entry.id,
+            //attributes: {
+                id: entry.id,  // Embed the 'id' into 'attributes'
+            ...entry.attributes,
+            //},
+        });
+ 
         const newData = {
-            attributes: {
+           // attributes: {
                 id: data.id,  // Embed the main entity's id into its attributes
                 ...data.attributes,
-                tutor: data.attributes.tutor ? extractValues(data.attributes.tutor.data.attributes) : null,
-                student: data.attributes.student ? data.attributes.student.data.attributes.matrikel_number : null,
-                examiner: data.attributes.examiner ? extractValues(data.attributes.examiner.data.attributes) : null,
-                exam_mode: data.attributes.exam_mode ? data.attributes.exam_mode.data.attributes.name : null,
-                institute: data.attributes.institute ? data.attributes.institute.data.attributes.abbreviation : null,
+                tutor: data.attributes.tutor ? embedIdInAttributes(data.attributes.tutor.data) : null,
+                student: data.attributes.student ? embedIdInAttributes(data.attributes.student.data) : null,
+                examiner: data.attributes.examiner ? embedIdInAttributes(data.attributes.examiner.data) : null,
+                exam_mode: data.attributes.exam_mode ? embedIdInAttributes(data.attributes.exam_mode.data) : null,
+                institute: data.attributes.institute ? embedIdInAttributes(data.attributes.institute.data) : null,
                 student_misc: data.attributes.student ? data.attributes.student.data.attributes.misc : null,
-                room: data.attributes.room ? data.attributes.room.data.attributes.name : null,
-                major: data.attributes.student ? data.attributes.student.data.attributes.major.data.attributes.name : null,
+                major: data.attributes.student ? embedIdInAttributes(data.attributes.student.data.attributes.major.data) : null,
+                room: data.attributes.room ? embedIdInAttributes(data.attributes.room.data) : null,
                 tutor_id: data.attributes.tutor ? data.attributes.tutor.data.id : null,
                 student_id: data.attributes.student ? data.attributes.student.data.id : null,
                 examiner_id: data.attributes.examiner ? data.attributes.examiner.data.id : null,
@@ -133,9 +141,9 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
                 institute_id: data.attributes.institute ? data.attributes.institute.data.id : null,
                 mode_id: data.attributes.exam_mode ? data.attributes.exam_mode.data.id : null,
                 room_id: data.attributes.room ? data.attributes.room.data.id : null,
-            },
+          //  },
         };
 
-        return { data: newData };
+        return newData;
     },
 }));

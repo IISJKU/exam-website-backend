@@ -16,24 +16,24 @@ module.exports = createCoreController('api::student.student', ({ strapi }) => ({
        // Helper function to embed 'id' in 'attributes' of related items
        const embedIdInAttributes = (entry) => ({
           // id: entry.id,
-           attributes: {
+          // attributes: {
                id: entry.id,  // Embed the 'id' into 'attributes'
                ...entry.attributes,
-           },
+          // },
        });
  
        // Process the main entity and its populated relations
        const newData = data.map((entry) => ({
            //id: entry.id,
-           attributes: {
+          // attributes: {
               id: entry.id, // Embed the main entity's id into its attributes
               ...entry.attributes,
-              major: entry.attributes.major ? entry.attributes.major.data.attributes.name : null, 
+              major: entry.attributes.major ? embedIdInAttributes(entry.attributes.major.data) : null, 
               major_id: entry.attributes.major ? entry.attributes.major.data.id : null, 
-           },
+          // },
        }));
   
-      return { data: newData };
+      return newData;
   },
 
   // Override the default findOne method
@@ -47,22 +47,21 @@ module.exports = createCoreController('api::student.student', ({ strapi }) => ({
      // Helper function to embed 'id' in 'attributes' of related items
      const embedIdInAttributes = (entry) => ({
       // id: entry.id,
-       attributes: {
+      // attributes: {
            id: entry.id,  // Embed the 'id' into 'attributes'
            ...entry.attributes,
-       },
-   });
-
-    // Process the response just like the 'find' method
+       //},
+     });
+    
     const newData = {
-      attributes: {
+      //attributes: {
           id: data.id,  // Embed the main entity's id into its attributes
         ...data.attributes,
-        major: data.attributes.major ? data.attributes.major.data.attributes.name : null,
+        major: data.attributes.major ? embedIdInAttributes(data.attributes.major.data) : null, 
         major_id: data.attributes.major ? data.attributes.major.data.id : null,
-      },
+      //},
   };
 
-    return { data: newData };
+    return newData;
   },
   }));

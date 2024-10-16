@@ -16,13 +16,13 @@ module.exports = createCoreController('api::major.major', ({ strapi }) => ({
       // Process the main entity and its populated relations
       const newData = data.map((entry) => ({
         //id: entry.id,
-        attributes: {
+        //attributes: {
           id: entry.id, // Embed the main entity's id into its attributes
           ...entry.attributes,
-        },
+        //},
       }));
   
-      return { data: newData };
+      return newData;
     },
   
     // Override the default findOne method
@@ -33,15 +33,14 @@ module.exports = createCoreController('api::major.major', ({ strapi }) => ({
   
       // Call the default findOne to get the entity by ID
       const { data } = await super.update(ctx);
-  
-      // Process the response just like the 'find' method
+
       const newData = {
-        attributes: {
+       // attributes: {
           id: data.id,  // Embed the main entity's id into its attributes
           ...data.attributes,
-         },
+         //},
      };
-      return { data: newData };
+      return newData ;
     },
   }));
   
