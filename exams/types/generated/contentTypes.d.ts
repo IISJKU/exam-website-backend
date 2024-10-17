@@ -826,7 +826,7 @@ export interface ApiExamExam extends Schema.CollectionType {
       'oneToOne',
       'api::institute.institute'
     >;
-    room: Attribute.Relation<'api::exam.exam', 'oneToOne', 'api::room.room'>;
+    room: Attribute.Relation<'api::exam.exam', 'manyToOne', 'api::room.room'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &
@@ -987,6 +987,7 @@ export interface ApiRoomRoom extends Schema.CollectionType {
     capacity: Attribute.Integer & Attribute.Required;
     location: Attribute.String;
     isAvailable: Attribute.Boolean & Attribute.Required;
+    exams: Attribute.Relation<'api::room.room', 'oneToMany', 'api::exam.exam'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::room.room', 'oneToOne', 'admin::user'> &

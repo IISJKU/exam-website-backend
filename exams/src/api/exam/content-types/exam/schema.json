@@ -59,8 +59,9 @@
     },
     "room": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::room.room"
+      "relation": "manyToOne",
+      "target": "api::room.room",
+      "inversedBy": "exams"
     }
   }
 }

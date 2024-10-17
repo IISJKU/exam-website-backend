@@ -25,13 +25,31 @@ module.exports = createCoreController('api::institute.institute', ({ strapi }) =
       return newData;
     },
   
-    // Override the default findOne method
+  // Override the default findOne method
+  async findOne(ctx) {
+    const { id } = ctx.params;  // Assuming the ID of the entity to fetch is provided in the URL
+
+    ctx.query.populate = "*"; // This will populate all relations
+
+    // Call the default findOne to get the entity by ID
+    const { data } = await super.findOne(ctx);
+
+    const newData = {
+      //attributes: {
+        id: data.id,  // Embed the main entity's id into its attributes
+        ...data.attributes,
+      // },
+    };
+    return newData;
+  },
+
+    // Override the default update method
     async update(ctx) {
       const { id } = ctx.params;  // Assuming the ID of the entity to fetch is provided in the URL
   
       ctx.query.populate = "*"; // This will populate all relations
   
-      // Call the default findOne to get the entity by ID
+      // Call the default update to get the entity by ID
       const { data } = await super.update(ctx);
   
       const newData = {

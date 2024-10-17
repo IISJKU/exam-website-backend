@@ -76,7 +76,71 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
         return newData;
     },
 
-    // Override the default findOne method
+    // Override the default findOne method to fetch a single entity
+  async findOne(ctx) {
+    const { id } = ctx.params;  // Get the ID from the route parameters
+
+    // Specify fields and relations to populate
+    ctx.query.populate = {
+      student: {
+        fields: ['matrikel_number', 'misc'],
+        populate: {
+          major: {
+            fields: ['name']  // Specify the major fields to populate
+          }
+        }
+      },
+      tutor: {
+        fields: ['first_name', 'last_name']
+      },
+      examiner: {
+        fields: ['first_name', 'last_name']
+      },
+      exam_mode: {
+        fields: ['name']
+      },
+      institute: {
+        fields: ['name', 'abbreviation']
+      },
+      room: {
+        fields: ['name']
+      }
+    };
+
+    // Call the default findOne to get the entity by ID
+    const { data } = await super.findOne(ctx);
+
+    // Helper function to embed 'id' in 'attributes' of related items
+    const embedIdInAttributes = (entry) => ({
+      id: entry.id,  // Embed the 'id' into 'attributes'
+      ...entry.attributes,
+    });
+
+    // Process the main entity and its populated relations
+    const newData = {
+      id: data.id,  // Embed the main entity's id into its attributes
+      ...data.attributes,
+      tutor: data.attributes.tutor ? embedIdInAttributes(data.attributes.tutor.data) : null,
+      student: data.attributes.student ? embedIdInAttributes(data.attributes.student.data) : null,
+      examiner: data.attributes.examiner ? embedIdInAttributes(data.attributes.examiner.data) : null,
+      exam_mode: data.attributes.exam_mode ? embedIdInAttributes(data.attributes.exam_mode.data) : null,
+      institute: data.attributes.institute ? embedIdInAttributes(data.attributes.institute.data) : null,
+      student_misc: data.attributes.student ? data.attributes.student.data.attributes.misc : null,
+      major: data.attributes.student ? embedIdInAttributes(data.attributes.student.data.attributes.major.data) : null,
+      room: data.attributes.room ? embedIdInAttributes(data.attributes.room.data) : null,
+      tutor_id: data.attributes.tutor ? data.attributes.tutor.data.id : null,
+      student_id: data.attributes.student ? data.attributes.student.data.id : null,
+      examiner_id: data.attributes.examiner ? data.attributes.examiner.data.id : null,
+      major_id: data.attributes.student.data.attributes.major ? data.attributes.student.data.attributes.major.data.id : null,
+      institute_id: data.attributes.institute ? data.attributes.institute.data.id : null,
+      mode_id: data.attributes.exam_mode ? data.attributes.exam_mode.data.id : null,
+      room_id: data.attributes.room ? data.attributes.room.data.id : null,
+    };
+
+    return newData;
+  },
+
+    // Override the default update method
     async update(ctx) {
         const { id } = ctx.params;  // Assuming the ID of the entity to fetch is provided in the URL
 
@@ -110,7 +174,7 @@ module.exports = createCoreController('api::exam.exam', ({ strapi }) => ({
         // Helper function to extract only values from an object
         const extractValues = (obj) => Object.values(obj);
 
-        // Call the default findOne to get the entity by ID
+        // Call the default update to get the entity by ID
         const { data } = await super.update(ctx);
 
          // Helper function to embed 'id' in 'attributes' of related items

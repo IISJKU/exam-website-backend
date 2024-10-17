@@ -28,6 +28,12 @@
     "isAvailable": {
       "type": "boolean",
       "required": true
+    },
+    "exams": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::exam.exam",
+      "mappedBy": "room"
     }
   }
 }
