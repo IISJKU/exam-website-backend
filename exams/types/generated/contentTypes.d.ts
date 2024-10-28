@@ -827,6 +827,7 @@ export interface ApiExamExam extends Schema.CollectionType {
       'api::institute.institute'
     >;
     room: Attribute.Relation<'api::exam.exam', 'manyToOne', 'api::room.room'>;
+    confirmed: Attribute.Boolean & Attribute.DefaultTo<false>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &
@@ -971,6 +972,38 @@ export interface ApiMajorMajor extends Schema.CollectionType {
   };
 }
 
+export interface ApiNotificationNotification extends Schema.CollectionType {
+  collectionName: 'notifications';
+  info: {
+    singularName: 'notification';
+    pluralName: 'notifications';
+    displayName: 'Notification';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    information: Attribute.String;
+    sentBy: Attribute.String;
+    examName: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::notification.notification',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::notification.notification',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiRoomRoom extends Schema.CollectionType {
   collectionName: 'rooms';
   info: {
@@ -1098,6 +1131,7 @@ declare module '@strapi/types' {
       'api::examiner.examiner': ApiExaminerExaminer;
       'api::institute.institute': ApiInstituteInstitute;
       'api::major.major': ApiMajorMajor;
+      'api::notification.notification': ApiNotificationNotification;
       'api::room.room': ApiRoomRoom;
       'api::student.student': ApiStudentStudent;
       'api::tutor.tutor': ApiTutorTutor;
