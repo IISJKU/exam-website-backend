@@ -20,11 +20,6 @@
       "type": "string",
       "required": true
     },
-    "email": {
-      "type": "email",
-      "required": true,
-      "unique": true
-    },
     "phone": {
       "type": "biginteger",
       "required": true,
@@ -37,6 +32,12 @@
     },
     "course": {
       "type": "string"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "tutor"
     }
   }
 }

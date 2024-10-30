@@ -724,6 +724,16 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    student: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::student.student'
+    >;
+    tutor: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::tutor.tutor'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1044,7 +1054,6 @@ export interface ApiStudentStudent extends Schema.CollectionType {
   attributes: {
     first_name: Attribute.String & Attribute.Required;
     last_name: Attribute.String & Attribute.Required;
-    email: Attribute.Email & Attribute.Required & Attribute.Unique;
     phone: Attribute.BigInteger;
     emergency_contact: Attribute.BigInteger;
     matrikel_number: Attribute.String & Attribute.Required & Attribute.Unique;
@@ -1055,6 +1064,11 @@ export interface ApiStudentStudent extends Schema.CollectionType {
       'api::student.student',
       'oneToOne',
       'api::major.major'
+    >;
+    user: Attribute.Relation<
+      'api::student.student',
+      'oneToOne',
+      'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1087,10 +1101,14 @@ export interface ApiTutorTutor extends Schema.CollectionType {
   attributes: {
     first_name: Attribute.String & Attribute.Required;
     last_name: Attribute.String & Attribute.Required;
-    email: Attribute.Email & Attribute.Required & Attribute.Unique;
     phone: Attribute.BigInteger & Attribute.Required & Attribute.Unique;
     matrikel_number: Attribute.String & Attribute.Required & Attribute.Unique;
     course: Attribute.String;
+    user: Attribute.Relation<
+      'api::tutor.tutor',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
