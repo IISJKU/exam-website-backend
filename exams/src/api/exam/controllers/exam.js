@@ -88,29 +88,29 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
         return { id: entry.id, ...entry.attributes };
       };
   
-      const newData = data.map((entry) => ({
-        id: entry.id,
-        ...entry.attributes,
-        tutor: entry.attributes.tutor && entry.attributes.tutor.data ? embedIdInAttributes(entry.attributes.tutor.data) : null,
-        student: entry.attributes.student && entry.attributes.student.data ? embedIdInAttributes(entry.attributes.student.data) : null,
-        examiner: entry.attributes.examiner && entry.attributes.examiner.data ? embedIdInAttributes(entry.attributes.examiner.data) : null,
-        exam_mode: entry.attributes.exam_mode && entry.attributes.exam_mode.data ? embedIdInAttributes(entry.attributes.exam_mode.data) : null,
-        institute: entry.attributes.institute && entry.attributes.institute.data ? embedIdInAttributes(entry.attributes.institute.data) : null,
-        student_misc: entry.attributes.student && entry.attributes.student.data ? entry.attributes.student.data.attributes.misc : null,
-        major: entry.attributes.student && entry.attributes.student.data && entry.attributes.student.data.attributes.major
-          ? embedIdInAttributes(entry.attributes.student.data.attributes.major.data)
+      const newData = {
+        id: data.id,
+        ...data.attributes,
+        tutor: data.attributes.tutor && data.attributes.tutor.data ? embedIdInAttributes(data.attributes.tutor.data) : null,
+        student: data.attributes.student && data.attributes.student.data ? embedIdInAttributes(data.attributes.student.data) : null,
+        examiner: data.attributes.examiner && data.attributes.examiner.data ? embedIdInAttributes(data.attributes.examiner.data) : null,
+        exam_mode: data.attributes.exam_mode && data.attributes.exam_mode.data ? embedIdInAttributes(data.attributes.exam_mode.data) : null,
+        institute: data.attributes.institute && data.attributes.institute.data ? embedIdInAttributes(data.attributes.institute.data) : null,
+        student_misc: data.attributes.student && data.attributes.student.data ? data.attributes.student.data.attributes.misc : null,
+        major: data.attributes.student && data.attributes.student.data && data.attributes.student.data.attributes.major
+          ? embedIdInAttributes(data.attributes.student.data.attributes.major.data)
           : null,
-        room: entry.attributes.room && entry.attributes.room.data ? embedIdInAttributes(entry.attributes.room.data) : null,
-        tutor_id: entry.attributes.tutor && entry.attributes.tutor.data ? entry.attributes.tutor.data.id : null,
-        student_id: entry.attributes.student && entry.attributes.student.data ? entry.attributes.student.data.id : null,
-        examiner_id: entry.attributes.examiner && entry.attributes.examiner.data ? entry.attributes.examiner.data.id : null,
-        major_id: entry.attributes.student && entry.attributes.student.data && entry.attributes.student.data.attributes.major
-          ? entry.attributes.student.data.attributes.major.data.id
+        room: data.attributes.room && data.attributes.room.data ? embedIdInAttributes(data.attributes.room.data) : null,
+        tutor_id: data.attributes.tutor && data.attributes.tutor.data ? data.attributes.tutor.data.id : null,
+        student_id: data.attributes.student && data.attributes.student.data ? data.attributes.student.data.id : null,
+        examiner_id: data.attributes.examiner && data.attributes.examiner.data ? data.attributes.examiner.data.id : null,
+        major_id: data.attributes.student && data.attributes.student.data && data.attributes.student.data.attributes.major
+          ? data.attributes.student.data.attributes.major.data.id
           : null,
-        institute_id: entry.attributes.institute && entry.attributes.institute.data ? entry.attributes.institute.data.id : null,
-        mode_id: entry.attributes.exam_mode && entry.attributes.exam_mode.data ? entry.attributes.exam_mode.data.id : null,
-        room_id: entry.attributes.room && entry.attributes.room.data ? entry.attributes.room.data.id : null,
-      }));      
+        institute_id: data.attributes.institute && data.attributes.institute.data ? data.attributes.institute.data.id : null,
+        mode_id: data.attributes.exam_mode && data.attributes.exam_mode.data ? data.attributes.exam_mode.data.id : null,
+        room_id: data.attributes.room && data.attributes.room.data ? data.attributes.room.data.id : null,
+      };      
   
       return newData;
   },
