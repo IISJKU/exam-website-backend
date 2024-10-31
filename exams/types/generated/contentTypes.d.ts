@@ -996,7 +996,20 @@ export interface ApiNotificationNotification extends Schema.CollectionType {
   attributes: {
     information: Attribute.String;
     sentBy: Attribute.String;
-    examName: Attribute.String;
+    exam_id: Attribute.Integer;
+    oldInformation: Attribute.String;
+    accepted: Attribute.Boolean;
+    type: Attribute.Enumeration<
+      [
+        'confirmChange',
+        'discardChange',
+        'createExam',
+        'proposeChange',
+        'tutorConfirm',
+        'adminChange'
+      ]
+    >;
+    seenBy: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

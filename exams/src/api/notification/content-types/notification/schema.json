@@ -18,7 +18,27 @@
     "sentBy": {
       "type": "string"
     },
-    "examName": {
+    "exam_id": {
+      "type": "integer"
+    },
+    "oldInformation": {
+      "type": "string"
+    },
+    "accepted": {
+      "type": "boolean"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "confirmChange",
+        "discardChange",
+        "createExam",
+        "proposeChange",
+        "tutorConfirm",
+        "adminChange"
+      ]
+    },
+    "seenBy": {
       "type": "string"
     }
   }
