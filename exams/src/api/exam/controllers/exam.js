@@ -12,7 +12,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       ctx.query.populate = {
         // @ts-ignore
         student: {
-          fields: ["matrikel_number", "misc"],
+          fields: ["matrikel_number", "misc", "first_name", "last_name"],
           populate: {
             major: {
               fields: ["name"],
@@ -67,7 +67,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       ctx.query.populate = {
         // @ts-ignore
         student: {
-          fields: ["matrikel_number", "misc"],
+          fields: ["matrikel_number", "misc", "first_name", "last_name"],
           populate: {
             major: {
               fields: ["name"],
@@ -122,7 +122,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
     ctx.query.populate = {
       // @ts-ignore
       student: {
-        fields: ["matrikel_number", "misc"],
+        fields: ["matrikel_number", "misc", "first_name", "last_name"],
         populate: {
           major: {
             fields: ["name"], // Specify the major fields to populate
@@ -203,6 +203,37 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       },
       populate: {
         student: {
+          fields: ["matrikel_number", "misc", "first_name", "last_name"],
+          populate: {
+            major: {
+              fields: ["name"], // Populate fields as needed
+            },
+          },
+        },
+        tutor: { fields: ["first_name", "last_name"] },
+        examiner: { fields: ["first_name", "last_name"] },
+        exam_mode: { fields: ["name"] },
+        institute: { fields: ["name", "abbreviation"] },
+        room: { fields: ["name"] },
+      },
+    });
+
+    return exams;
+  },
+
+  async findExamsForTutor(ctx) {
+    const { tutorId } = ctx.params;
+  
+    if (!tutorId) {
+      return ctx.badRequest("Missing student ID");
+    }
+    // Use the correct filter syntax for a relational field
+    const exams = await strapi.entityService.findMany("api::exam.exam", {
+      filters: {
+        tutor: { id: tutorId }, // Filters based on the relation's ID
+      },
+      populate: {
+        student: {
           fields: ["matrikel_number", "misc"],
           populate: {
             major: {
@@ -219,6 +250,109 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
     });
 
     return exams;
+  },
+
+ // Add a tutor to an exam
+async addTutorToExam(ctx) {
+  // Extract examId and tutorId from request body and ensure they are numbers
+  // @ts-ignore
+  let { examId, tutorId } = ctx.request.body;
+  
+  // Convert examId to a number in case it's passed as a string
+  examId = Number(examId);
+  
+  // Validate the presence of examId and tutorId
+  if (!examId || isNaN(examId) || !tutorId) {
+    return ctx.badRequest("Missing or invalid exam ID or tutor ID");
+  }
+
+  const updatedExam = await strapi.entityService.update("api::exam.exam", examId, {
+    data: {
+      tutor: tutorId, // Set the tutor relation with tutorId
+    },
+    populate: {
+      student: {
+        fields: ["matrikel_number", "misc", "first_name", "last_name"],
+        populate: {
+          major: { fields: ["name"] },
+        },
+      },
+      tutor: { fields: ["first_name", "last_name"] },
+      examiner: { fields: ["first_name", "last_name"] },
+      exam_mode: { fields: ["name"] },
+      institute: { fields: ["name", "abbreviation"] },
+      room: { fields: ["name"] },
+    },
+  });
+
+  // Check if updatedExam is null
+  if (!updatedExam) {
+    return ctx.notFound("Exam not found");
+  }
+
+  return updatedExam;
+},
+
+  // Custom method to find exams without a tutor assigned
+  async findExamsWithoutTutor(ctx) {
+      const examsWithoutTutor = await strapi.entityService.findMany("api::exam.exam", {
+        filters: {
+          // @ts-ignore
+          tutor: { $null: true }, // Filter exams where tutor is null
+        },
+        populate: {
+          student: {
+            fields: ["matrikel_number", "misc", "first_name", "last_name"],
+            populate: {
+              major: { fields: ["name"] },
+            },
+          },
+          examiner: { fields: ["first_name", "last_name"] },
+          exam_mode: { fields: ["name"] },
+          institute: { fields: ["name", "abbreviation"] },
+          room: { fields: ["name"] },
+        },
+      });
+
+    return examsWithoutTutor;
+   
+  },
+  // Remove a tutor from an exam
+  async removeTutorFromExam(ctx) {
+    // Extract examId from request body
+    // @ts-ignore
+    const { examId } = ctx.request.body;
+
+    if (!examId) {
+      return ctx.badRequest("Missing exam ID");
+    }
+
+    // Update the exam, setting tutor field to null
+    const updatedExam = await strapi.entityService.update("api::exam.exam", examId, {
+      data: {
+        tutor: null, // Remove the tutor association
+      },
+      populate: {
+        student: {
+          fields: ["matrikel_number", "misc", "first_name", "last_name"],
+          populate: {
+            major: { fields: ["name"] },
+          },
+        },
+        tutor: { fields: ["first_name", "last_name"] },
+        examiner: { fields: ["first_name", "last_name"] },
+        exam_mode: { fields: ["name"] },
+        institute: { fields: ["name", "abbreviation"] },
+        room: { fields: ["name"] },
+      },
+    });
+
+    // Check if updatedExam is null
+    if (!updatedExam) {
+      return ctx.notFound("Exam not found");
+    }
+
+    return updatedExam;
   },
   
 }));
