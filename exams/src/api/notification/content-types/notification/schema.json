@@ -33,6 +33,7 @@
         "confirmChange",
         "discardChange",
         "createExam",
+        "createExamOld",
         "proposeChange",
         "tutorConfirm",
         "adminChange"
