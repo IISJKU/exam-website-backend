@@ -12,7 +12,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
     ctx.query.populate = {
       // @ts-ignore
       student: {
-        fields: ["matrikel_number", "misc"],
+        fields: ["matrikel_number", "misc", "first_name", "last_name"],
         populate: {
           major: {
             fields: ["name"],
@@ -113,7 +113,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
     ctx.query.populate = {
       // @ts-ignore
       student: {
-        fields: ["matrikel_number", "misc"],
+        fields: ["matrikel_number", "misc", "first_name", "last_name"],
         populate: {
           major: {
             fields: ["name"],
@@ -384,7 +384,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       },
       populate: {
         student: {
-          fields: ["matrikel_number", "misc"],
+          fields: ["matrikel_number", "misc", "first_name", "last_name"],
           populate: {
             major: {
               fields: ["name"], // Populate fields as needed
