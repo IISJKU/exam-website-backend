@@ -1007,6 +1007,7 @@ export interface ApiNotificationNotification extends Schema.CollectionType {
         'createExamOld',
         'proposeChange',
         'tutorConfirm',
+        'tutorDecline',
         'adminChange'
       ]
     >;
