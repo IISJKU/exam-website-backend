@@ -3,7 +3,7 @@ module.exports = {
     {
       method: "GET",
       path: "/notifications/me",
-      handler: "notification.findNotificationsForStudent",
+      handler: "notification.findMyNotifications",
     },
   ],
 };

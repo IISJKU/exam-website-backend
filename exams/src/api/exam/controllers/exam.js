@@ -330,58 +330,41 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
     return newData;
   },
 
-  async findExamsForStudent(ctx) {
+  async findMyExams(ctx) {
     const userId = ctx.state.user.id;
+    let apiContentType = "";
 
-    const students = await strapi.entityService.findMany(
-      "api::student.student",
-      {
-        filters: {
-          user: { id: userId },
-        },
-        fields: ["id"], // Retrieve only the exam IDs
-      }
-    );
+    if (ctx.state.user.role.type == "student") {
+      apiContentType = "api::student.student";
+    } else if (ctx.state.user.role.type == "tutor") {
+      apiContentType = "api::tutor.tutor";
+    }
 
-    // @ts-ignore
-    let studentId = students[0].id;
-
-    // Use the correct filter syntax for a relational field
-    const exams = await strapi.entityService.findMany("api::exam.exam", {
+    //@ts-ignore
+    const entries = await strapi.entityService.findMany(apiContentType, {
       filters: {
-        student: { id: studentId }, // Filters based on the relation's ID
+        user: { id: userId },
       },
-      populate: {
-        student: {
-          fields: ["matrikel_number", "misc", "first_name", "last_name"],
-          populate: {
-            major: {
-              fields: ["name"], // Populate fields as needed
-            },
-          },
-        },
-        tutor: { fields: ["first_name", "last_name"] },
-        examiner: { fields: ["first_name", "last_name"] },
-        exam_mode: { fields: ["name"] },
-        institute: { fields: ["name", "abbreviation"] },
-        room: { fields: ["name"] },
-      },
+      fields: ["id"], // Retrieve only the exam IDs
     });
 
-    return exams;
-  },
+    // @ts-ignore
+    let entriesId = entries[0].id;
 
-  async findExamsForTutor(ctx) {
-    const { tutorId } = ctx.params;
+    let filter = {
+      student: { id: entriesId },
+    };
 
-    if (!tutorId) {
-      return ctx.badRequest("Missing student ID");
+    if (ctx.state.user.role.type == "tutor") {
+      //@ts-ignore
+      filter = {
+        tutor: { id: entriesId },
+      };
     }
+
     // Use the correct filter syntax for a relational field
     const exams = await strapi.entityService.findMany("api::exam.exam", {
-      filters: {
-        tutor: { id: tutorId }, // Filters based on the relation's ID
-      },
+      filters: filter,
       populate: {
         student: {
           fields: ["matrikel_number", "misc", "first_name", "last_name"],

@@ -70,27 +70,41 @@ module.exports = createCoreController("api::notification.notification", () => ({
     return formattedNotification;
   },
 
-  async findNotificationsForStudent(ctx) {
+  async findMyNotifications(ctx) {
     const userId = ctx.state.user.id;
+    let apiContentType = "";
 
-    const students = await strapi.entityService.findMany(
-      "api::student.student",
-      {
-        filters: {
-          user: { id: userId },
-        },
-        fields: ["id"], // Retrieve only the exam IDs
-      }
-    );
+    if (ctx.state.user.role.type == "student") {
+      apiContentType = "api::student.student";
+    } else if (ctx.state.user.role.type == "tutor") {
+      apiContentType = "api::tutor.tutor";
+    }
+
+    //@ts-ignore
+    const entries = await strapi.entityService.findMany(apiContentType, {
+      filters: {
+        user: { id: userId },
+      },
+      fields: ["id"], // Retrieve only the exam IDs
+    });
 
     // @ts-ignore
-    let studentId = students[0].id;
+    let entriesId = entries[0].id;
+
+    let filter = {
+      student: { id: entriesId },
+    };
+
+    if (ctx.state.user.role.type == "tutor") {
+      //@ts-ignore
+      filter = {
+        tutor: { id: entriesId },
+      };
+    }
 
     // First, find all exams where the student is linked
     const exams = await strapi.entityService.findMany("api::exam.exam", {
-      filters: {
-        student: { id: studentId },
-      },
+      filters: filter,
       fields: ["id"], // Retrieve only the exam IDs
     });
 
@@ -111,6 +125,11 @@ module.exports = createCoreController("api::notification.notification", () => ({
 
     //addDiscardedExamNotifications(studentId);
 
+    let idType = "student_id";
+    if (ctx.state.user.role.type == "tutor") {
+      idType = "tutor_id";
+    }
+
     {
       const notifications2 = await strapi.entityService.findMany(
         "api::notification.notification",
@@ -124,17 +143,17 @@ module.exports = createCoreController("api::notification.notification", () => ({
       notifications2.forEach((notification) => {
         if (
           notification.oldInformation != undefined &&
-          notification.oldInformation.includes("student_id")
+          notification.oldInformation.includes(idType)
         ) {
           let str = notification.oldInformation;
-          let idPos = str.indexOf("student_id");
+          let idPos = str.indexOf(idType);
           let start = str.indexOf('"', idPos);
           let stop = str.indexOf('"', start + 1);
 
           let nums = str.substring(start, stop);
-          console.log(nums[2]);
+
           if (
-            Number(nums[2]) == studentId &&
+            Number(nums[2]) == entriesId &&
             notification.type == "discardChange"
           ) {
             nuNotifs.push(notification);
@@ -145,7 +164,6 @@ module.exports = createCoreController("api::notification.notification", () => ({
       nuNotifs.forEach((notification) => {
         if (!notifications.includes(notification)) {
           notifications.push(notification);
-          console.log(notification);
         }
       });
     }

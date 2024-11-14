@@ -102,17 +102,46 @@ module.exports = createCoreController("api::student.student", ({ strapi }) => ({
 
   async findStudentsMe(ctx) {
     const userId = ctx.state.user.id;
+    console.log("yeeeeeee");
 
-    const students = await strapi.entityService.findMany(
-      "api::student.student",
-      {
+    if (ctx.state.user.role.type == "student") {
+      const students = await strapi.entityService.findMany(
+        "api::student.student",
+        {
+          filters: {
+            user: { id: userId },
+          },
+          fields: ["id"], // Retrieve only the exam IDs
+        }
+      );
+
+      return students;
+    } else {
+      console.log("yeeeeeee2");
+      const exams = await strapi.entityService.findMany("api::exam.exam", {
         filters: {
-          user: { id: userId },
+          tutor: { id: userId },
         },
-        fields: ["id"], // Retrieve only the exam IDs
-      }
-    );
+        fields: "*", // Retrieve only the exam IDs
+      });
 
-    return students;
+      const students = await strapi.entityService.findMany("api::exam.exam", {
+        fields: "*",
+      });
+
+      const filteredStudents = [];
+      exams.forEach((exam) => {
+        students.forEach((student) => {
+          //@ts-ignore
+          if (exam.student_id == student.id) {
+            filteredStudents.push(student);
+          }
+        });
+      });
+
+      console.log(filteredStudents);
+
+      return filteredStudents;
+    }
   },
 }));
