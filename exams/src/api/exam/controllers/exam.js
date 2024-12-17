@@ -403,7 +403,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
   // Add a tutor to an exam
   async addTutorToExam(ctx) {
     // Extract examId and tutorId from request body and ensure they are numbers
-    // @ts-ignore
+    //@ts-ignore
     let { examId, tutorId } = ctx.request.body;
 
     // Convert examId to a number in case it's passed as a string
@@ -414,12 +414,40 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       return ctx.badRequest("Missing or invalid exam ID or tutor ID");
     }
 
+    // Fetch the current registeredTutors to append the new tutor
+    const existingExam = await strapi.entityService.findOne(
+      "api::exam.exam",
+      examId,
+      {
+        populate: {
+          registeredTutors: { fields: ["id"] },
+        },
+      }
+    );
+
+    // Check if the exam exists
+    if (!existingExam) {
+      return ctx.notFound("Exam not found");
+    }
+
+    // Extract the current list of tutor IDs and append the new tutorId
+    const existingTutors = existingExam.registeredTutors
+      ? existingExam.registeredTutors.map((tutor) => tutor.id)
+      : [];
+
+    if (existingTutors.includes(tutorId)) {
+      return ctx.badRequest("Tutor already registered for this exam");
+    }
+
+    const updatedTutors = [...existingTutors, tutorId];
+
+    // Update the exam with the new list of registered tutors
     const updatedExam = await strapi.entityService.update(
       "api::exam.exam",
       examId,
       {
         data: {
-          tutor: tutorId, // Set the tutor relation with tutorId
+          registeredTutors: updatedTutors,
         },
         populate: {
           student: {
@@ -433,26 +461,55 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
           exam_mode: { fields: ["name"] },
           institute: { fields: ["name", "abbreviation"] },
           room: { fields: ["name"] },
+          registeredTutors: { fields: ["id", "first_name", "last_name"] },
         },
       }
     );
 
-    // Check if updatedExam is null
-    if (!updatedExam) {
-      return ctx.notFound("Exam not found");
-    }
-
     return updatedExam;
   },
 
-  // Custom method to find exams without a tutor assigned
+  // Custom method to fetch all tutors and print all fields
+  async printAllTutors(ctx) {
+    try {
+      const allTutors = await strapi.entityService.findMany(
+        "api::tutor.tutor",
+        {
+          populate: "*", // Fetch all relations and fields
+        }
+      );
+
+      console.log("All Tutors Data:", allTutors);
+
+      // Return the data (optional)
+      return allTutors;
+    } catch (error) {
+      console.error("Error fetching tutors:", error);
+      return ctx.internalServerError("An error occurred while fetching tutors");
+    }
+  },
+
+  // Custom method to find exams where the user has not registered yet
   async findExamsWithoutTutor(ctx) {
-    const examsWithoutTutor = await strapi.entityService.findMany(
+    const { user } = ctx.state; // Extract the authenticated user from the context
+    const userId = user?.id; // Get the user's ID
+
+    // Validate if the user is authenticated
+    if (!userId) {
+      return ctx.badRequest("User is not authenticated");
+    }
+
+    const examsWithoutUser = await strapi.entityService.findMany(
       "api::exam.exam",
       {
         filters: {
-          // @ts-ignore
-          tutor: { $null: true }, // Filter exams where tutor is null
+          //@ts-ignore
+          tutor: { $null: true }, // Exams where the tutor is not assigned
+          $or: [
+            { registeredTutors: { user: { id: { $ne: userId } } } }, // Exams where user is NOT in registeredTutors
+            //@ts-ignore
+            { registeredTutors: { $null: true } }, // Exams where registeredTutors is empty
+          ],
         },
         populate: {
           student: {
@@ -465,11 +522,12 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
           exam_mode: { fields: ["name"] },
           institute: { fields: ["name", "abbreviation"] },
           room: { fields: ["name"] },
+          registeredTutors: { fields: ["id", "first_name", "last_name"] },
         },
       }
     );
 
-    return examsWithoutTutor;
+    return examsWithoutUser;
   },
   // Remove a tutor from an exam
   async removeTutorFromExam(ctx) {
