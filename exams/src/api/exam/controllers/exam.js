@@ -345,6 +345,38 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
     return newData;
   },
 
+  // Custom method to fetch exams where the tutor is in registeredTutors
+  async findExamsWhereTutorIsRegistered(ctx) {
+    const { user } = ctx.state; // Extract the logged-in user
+    const userId = user?.id;
+
+    try {
+      const exams = await strapi.entityService.findMany("api::exam.exam", {
+        filters: {
+          registeredTutors: {
+            //@ts-ignore
+            user: {
+              id: { $eq: userId }, // Match tutor.user.id with userId
+            },
+          },
+        },
+        populate: {
+          registeredTutors: { fields: ["id", "first_name", "last_name"] },
+          tutor: { fields: ["id", "first_name", "last_name"] },
+          student: {
+            fields: ["matrikel_number", "first_name", "last_name"],
+            populate: { major: { fields: ["name"] } },
+          },
+        },
+      });
+
+      return exams;
+    } catch (error) {
+      console.error("Error fetching exams:", error);
+      return ctx.internalServerError("An error occurred while fetching exams");
+    }
+  },
+
   async findMyExams(ctx) {
     const userId = ctx.state.user.id;
     let apiContentType = "";
@@ -404,7 +436,16 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
   async addTutorToExam(ctx) {
     // Extract examId and tutorId from request body and ensure they are numbers
     //@ts-ignore
-    let { examId, tutorId } = ctx.request.body;
+    let { examId } = ctx.request.body;
+    const { user } = ctx.state; // Extract the logged-in user
+    const userId = user?.id;
+
+    const tutors = await strapi.entityService.findMany("api::tutor.tutor", {
+      filters: {
+        user: { id: userId },
+      },
+    });
+    let tutorId = tutors[0].id;
 
     // Convert examId to a number in case it's passed as a string
     examId = Number(examId);
@@ -546,6 +587,71 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       {
         data: {
           tutor: null, // Remove the tutor association
+        },
+        populate: {
+          student: {
+            fields: ["matrikel_number", "misc", "first_name", "last_name"],
+            populate: {
+              major: { fields: ["name"] },
+            },
+          },
+          tutor: { fields: ["first_name", "last_name"] },
+          examiner: { fields: ["first_name", "last_name"] },
+          exam_mode: { fields: ["name"] },
+          institute: { fields: ["name", "abbreviation"] },
+          room: { fields: ["name"] },
+        },
+      }
+    );
+
+    // Check if updatedExam is null
+    if (!updatedExam) {
+      return ctx.notFound("Exam not found");
+    }
+
+    return updatedExam;
+  },
+
+  async deregisterTutor(ctx) {
+    // Extract examId from request body
+    // @ts-ignore
+    const { examId } = ctx.request.body;
+    const { user } = ctx.state; // Extract the logged-in user
+    const userId = user?.id;
+
+    if (!examId) {
+      return ctx.badRequest("Missing exam ID");
+    }
+
+    const ex = await strapi.entityService.findOne("api::exam.exam", examId, {
+      populate: {
+        registeredTutors: { fields: ["first_name", "last_name", "id"] },
+      },
+    });
+    const tutors = await strapi.entityService.findMany("api::tutor.tutor", {
+      filters: {
+        user: { id: userId },
+      },
+    });
+
+    let newTutors = [];
+
+    //@ts-ignore
+    let regTut = ex.registeredTutors;
+    if (tutors.length == 1) {
+      regTut.forEach((el) => {
+        if (el.id != tutors[0].id) {
+          newTutors.push(el);
+        }
+      });
+    }
+
+    const updatedExam = await strapi.entityService.update(
+      "api::exam.exam",
+      examId,
+      {
+        data: {
+          registeredTutors: newTutors,
         },
         populate: {
           student: {

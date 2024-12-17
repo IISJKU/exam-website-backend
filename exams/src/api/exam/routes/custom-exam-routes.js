@@ -30,5 +30,18 @@ module.exports = {
       path: "/exams/me",
       handler: "exam.findMyExams",
     },
+    {
+      method: "POST",
+      path: "/exams/deregister-tutor",
+      handler: "exam.deregisterTutor",
+    },
+    {
+      method: "GET",
+      path: "/exams/find-registered",
+      handler: "exam.findExamsWhereTutorIsRegistered",
+      config: {
+        policies: [],
+      },
+    },
   ],
 };
