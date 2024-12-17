@@ -838,6 +838,11 @@ export interface ApiExamExam extends Schema.CollectionType {
     >;
     room: Attribute.Relation<'api::exam.exam', 'manyToOne', 'api::room.room'>;
     confirmed: Attribute.Boolean & Attribute.DefaultTo<false>;
+    registeredTutors: Attribute.Relation<
+      'api::exam.exam',
+      'oneToMany',
+      'api::tutor.tutor'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &

@@ -66,6 +66,11 @@
     "confirmed": {
       "type": "boolean",
       "default": false
+    },
+    "registeredTutors": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::tutor.tutor"
     }
   }
 }

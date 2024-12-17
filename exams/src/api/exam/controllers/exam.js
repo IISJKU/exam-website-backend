@@ -40,6 +40,10 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
         entry.attributes.tutor && entry.attributes.tutor.data
           ? embedIdInAttributes(entry.attributes.tutor.data)
           : null,
+      registerdTutors:
+        entry.attributes.tutor && entry.attributes.tutor.data
+          ? embedIdInAttributes(entry.attributes.tutor.data)
+          : null,
       student:
         entry.attributes.student && entry.attributes.student.data
           ? embedIdInAttributes(entry.attributes.student.data)
@@ -125,6 +129,10 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       exam_mode: { fields: ["name"] },
       institute: { fields: ["name", "abbreviation"] },
       room: { fields: ["name"] },
+      registeredTutors: {
+        // Directly populate the registeredTutors field
+        fields: ["id", "first_name", "last_name"], // Specify the fields to include
+      },
     };
 
     const { data } = await super.findOne(ctx);
@@ -203,6 +211,13 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
         data.attributes.room && data.attributes.room.data
           ? data.attributes.room.data.id
           : null,
+      registeredTutors:
+        data.attributes.registeredTutors &&
+        data.attributes.registeredTutors.data
+          ? data.attributes.registeredTutors.data.map((tutor) =>
+              embedIdInAttributes(tutor)
+            )
+          : [],
     };
 
     return newData;
