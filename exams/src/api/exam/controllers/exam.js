@@ -17,9 +17,19 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
           major: {
             fields: ["name"],
           },
+          user: {
+            fields: ["email"],
+          },
         },
       },
-      tutor: { fields: ["first_name", "last_name"] },
+      tutor: {
+        fields: ["first_name", "last_name"],
+        populate: {
+          user: {
+            fields: ["email"], 
+          },
+        },
+      },
       examiner: { fields: ["first_name", "last_name"] },
       exam_mode: { fields: ["name"] },
       institute: { fields: ["name", "abbreviation"] },
@@ -94,6 +104,20 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
         entry.attributes.student.data.attributes.major
           ? entry.attributes.student.data.attributes.major.data.id
           : null,
+      student_email:
+        entry.attributes.student &&
+        entry.attributes.student.data &&
+        entry.attributes.student.data.attributes.user &&
+        entry.attributes.student.data.attributes.user.data
+          ? entry.attributes.student.data.attributes.user.data.attributes.email
+          : null,
+      tutor_email:
+        entry.attributes.tutor &&
+        entry.attributes.tutor.data &&
+        entry.attributes.tutor.data.attributes.user &&
+        entry.attributes.tutor.data.attributes.user.data
+          ? entry.attributes.tutor.data.attributes.user.data.attributes.email
+          : null,
       institute_id:
         entry.attributes.institute && entry.attributes.institute.data
           ? entry.attributes.institute.data.id
@@ -122,9 +146,19 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
           major: {
             fields: ["name"],
           },
+          user: {
+            fields: ["email"],
+          },
         },
       },
-      tutor: { fields: ["first_name", "last_name"] },
+      tutor: {
+        fields: ["first_name", "last_name"],
+        populate: {
+          user: {
+            fields: ["email"], 
+          },
+        },
+      },
       examiner: { fields: ["first_name", "last_name"] },
       exam_mode: { fields: ["name"] },
       institute: { fields: ["name", "abbreviation"] },
@@ -199,6 +233,20 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
         data.attributes.student.data.attributes.major
           ? data.attributes.student.data.attributes.major.data.id
           : null,
+      student_email:
+        data.attributes.student &&
+        data.attributes.student.data &&
+        data.attributes.student.data.attributes.user &&
+        data.attributes.student.data.attributes.user.data
+          ? data.attributes.student.data.attributes.user.data.attributes.email
+          : null,
+      tutor_email:
+        data.attributes.tutor &&
+        data.attributes.tutor.data &&
+        data.attributes.tutor.data.attributes.user &&
+        data.attributes.tutor.data.attributes.user.data
+          ? data.attributes.tutor.data.attributes.user.data.attributes.email
+          : null,
       institute_id:
         data.attributes.institute && data.attributes.institute.data
           ? data.attributes.institute.data.id
@@ -235,10 +283,18 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
           major: {
             fields: ["name"], // Specify the major fields to populate
           },
+          user: {
+            fields: ["email"],
+          },
         },
       },
       tutor: {
         fields: ["first_name", "last_name"],
+        populate: {
+          user: {
+            fields: ["email"], 
+          },
+        },
       },
       examiner: {
         fields: ["first_name", "last_name"],
@@ -326,6 +382,20 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
         data.attributes.student.data &&
         data.attributes.student.data.attributes.major
           ? data.attributes.student.data.attributes.major.data.id
+          : null,
+      student_email:
+        data.attributes.student &&
+        data.attributes.student.data &&
+        data.attributes.student.data.attributes.user &&
+        data.attributes.student.data.attributes.user.data
+          ? data.attributes.student.data.attributes.user.data.attributes.email
+          : null,
+      tutor_email:
+        data.attributes.tutor &&
+        data.attributes.tutor.data &&
+        data.attributes.tutor.data.attributes.user &&
+        data.attributes.tutor.data.attributes.user.data
+          ? data.attributes.tutor.data.attributes.user.data.attributes.email
           : null,
       institute_id:
         data.attributes.institute && data.attributes.institute.data
@@ -419,9 +489,19 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
             major: {
               fields: ["name"], // Populate fields as needed
             },
+            user: {
+              fields: ["email"],
+            },
           },
         },
-        tutor: { fields: ["first_name", "last_name"] },
+        tutor: {
+          fields: ["first_name", "last_name"],
+          populate: {
+            user: {
+              fields: ["email"], 
+            },
+          },
+        },  
         examiner: { fields: ["first_name", "last_name"] },
         exam_mode: { fields: ["name"] },
         institute: { fields: ["name", "abbreviation"] },
@@ -495,9 +575,19 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
             fields: ["matrikel_number", "misc", "first_name", "last_name"],
             populate: {
               major: { fields: ["name"] },
+              user: {
+                fields: ["email"],
+              },
             },
           },
-          tutor: { fields: ["first_name", "last_name"] },
+        tutor: {
+          fields: ["first_name", "last_name"],
+          populate: {
+            user: {
+              fields: ["email"], 
+            },
+          },
+        },  
           examiner: { fields: ["first_name", "last_name"] },
           exam_mode: { fields: ["name"] },
           institute: { fields: ["name", "abbreviation"] },
@@ -556,7 +646,12 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
           student: {
             fields: ["matrikel_number", "misc", "first_name", "last_name"],
             populate: {
-              major: { fields: ["name"] },
+              major: {
+                fields: ["name"]
+              },
+              user: {
+                fields: ["email"],
+              },
             },
           },
           examiner: { fields: ["first_name", "last_name"] },
@@ -592,10 +687,22 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
           student: {
             fields: ["matrikel_number", "misc", "first_name", "last_name"],
             populate: {
-              major: { fields: ["name"] },
+              major: {
+                fields: ["name"] 
+              },
+              user: {
+                fields: ["email"],
+              },
             },
           },
-          tutor: { fields: ["first_name", "last_name"] },
+          tutor: {
+            fields: ["first_name", "last_name"],
+            populate: {
+              user: {
+                fields: ["email"], 
+              },
+            },
+          },
           examiner: { fields: ["first_name", "last_name"] },
           exam_mode: { fields: ["name"] },
           institute: { fields: ["name", "abbreviation"] },

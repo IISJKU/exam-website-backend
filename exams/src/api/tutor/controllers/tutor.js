@@ -19,6 +19,7 @@ module.exports = createCoreController("api::tutor.tutor", ({ strapi }) => ({
       //attributes: {
       id: entry.id, // Embed the main entity's id into its attributes
       ...entry.attributes,
+      tutor_email: entry.attributes.user.data ?  entry.attributes.user.data.attributes.email : null,
       // },
     }));
 

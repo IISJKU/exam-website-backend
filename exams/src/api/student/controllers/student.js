@@ -32,6 +32,7 @@ module.exports = createCoreController("api::student.student", ({ strapi }) => ({
         ? embedIdInAttributes(entry.attributes.major.data)
         : null,
       major_id: entry.attributes.major ? entry.attributes.major.data.id : null,
+      student_email: entry.attributes.user.data ?  entry.attributes.user.data.attributes.email : null,
       // },
     }));
 
