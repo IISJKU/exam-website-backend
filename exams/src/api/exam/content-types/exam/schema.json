@@ -44,7 +44,7 @@
       "type": "decimal",
       "required": true
     },
-    "status": {
+    "notes": {
       "type": "string"
     },
     "exam_mode": {
@@ -71,6 +71,18 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::tutor.tutor"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "Email Examiner Needed",
+        "Material Needed",
+        "No Tutor Needed",
+        "No Action Required",
+        "Archived"
+      ],
+      "default": "Email Examiner Needed",
+      "required": false
     }
   }
 }
