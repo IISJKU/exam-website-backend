@@ -34,6 +34,10 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       exam_mode: { fields: ["name"] },
       institute: { fields: ["name", "abbreviation"] },
       room: { fields: ["name"] },
+      registeredTutors: {
+        // Directly populate the registeredTutors field
+        fields: ["id", "first_name", "last_name"], // Specify the fields to include
+      },
     };
 
     const { data } = await super.find(ctx);
@@ -50,10 +54,12 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
         entry.attributes.tutor && entry.attributes.tutor.data
           ? embedIdInAttributes(entry.attributes.tutor.data)
           : null,
-      registerdTutors:
-        entry.attributes.tutor && entry.attributes.tutor.data
-          ? embedIdInAttributes(entry.attributes.tutor.data)
-          : null,
+      registeredTutors:
+        entry.attributes.registeredTutors && entry.attributes.registeredTutors.data
+            ? entry.attributes.registeredTutors.data.map((tutor) =>
+                embedIdInAttributes(tutor)
+              )
+            : [],
       student:
         entry.attributes.student && entry.attributes.student.data
           ? embedIdInAttributes(entry.attributes.student.data)
