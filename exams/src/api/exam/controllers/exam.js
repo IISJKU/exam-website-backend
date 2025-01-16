@@ -443,6 +443,18 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
             fields: ["matrikel_number", "first_name", "last_name"],
             populate: { major: { fields: ["name"] } },
           },
+          examiner: {
+            fields: ["first_name", "last_name"],
+          },
+          exam_mode: {
+            fields: ["name"],
+          },
+          institute: {
+            fields: ["name", "abbreviation"],
+          },
+          room: {
+            fields: ["name"],
+          },
         },
       });
 
