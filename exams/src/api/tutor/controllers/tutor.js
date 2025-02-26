@@ -5,8 +5,16 @@
  */
 
 const { createCoreController } = require("@strapi/strapi").factories;
+const embedIdInAttributes = (entry) => ({
+  // id: entry.id,
+  // attributes: {
+  id: entry.id, // Embed the 'id' into 'attributes'
+  ...entry.attributes,
+  // },
+});
 
 module.exports = createCoreController("api::tutor.tutor", ({ strapi }) => ({
+
   // Override the default find method
   async find(ctx) {
     ctx.query.populate = "*"; // This will populate all relations
@@ -19,7 +27,8 @@ module.exports = createCoreController("api::tutor.tutor", ({ strapi }) => ({
       //attributes: {
       id: entry.id, // Embed the main entity's id into its attributes
       ...entry.attributes,
-      tutor_email: entry.attributes.user.data ?  entry.attributes.user.data.attributes.email : null,
+      tutor_email: entry.attributes.user.data ? entry.attributes.user.data.attributes.email : null,
+      location : entry.attributes.location.data ? embedIdInAttributes(entry.attributes.location.data) : null,
       // },
     }));
 
@@ -39,6 +48,8 @@ module.exports = createCoreController("api::tutor.tutor", ({ strapi }) => ({
       //attributes: {
       id: data.id, // Embed the main entity's id into its attributes
       ...data.attributes,
+      location : data.attributes.location.data ? embedIdInAttributes(data.attributes.location.data) : null,
+
       //},
     };
     return newData;
@@ -57,6 +68,7 @@ module.exports = createCoreController("api::tutor.tutor", ({ strapi }) => ({
       //attributes: {
       id: data.id, // Embed the main entity's id into its attributes
       ...data.attributes,
+      location : data.attributes.location.data ? embedIdInAttributes(data.attributes.location.data) : null,
       //},
     };
     return newData;

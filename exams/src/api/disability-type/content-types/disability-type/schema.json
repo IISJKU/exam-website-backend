@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "disability_types",
+  "info": {
+    "singularName": "disability-type",
+    "pluralName": "disability-types",
+    "displayName": "DisabilityType",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "abbreviation": {
+      "type": "string"
+    },
+    "definition": {
+      "type": "text"
+    },
+    "students": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::student.student",
+      "mappedBy": "disability_types"
+    }
+  }
+}

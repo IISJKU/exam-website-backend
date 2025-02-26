@@ -798,6 +798,42 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiDisabilityTypeDisabilityType extends Schema.CollectionType {
+  collectionName: 'disability_types';
+  info: {
+    singularName: 'disability-type';
+    pluralName: 'disability-types';
+    displayName: 'DisabilityType';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    abbreviation: Attribute.String;
+    definition: Attribute.Text;
+    students: Attribute.Relation<
+      'api::disability-type.disability-type',
+      'manyToMany',
+      'api::student.student'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::disability-type.disability-type',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::disability-type.disability-type',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiExamExam extends Schema.CollectionType {
   collectionName: 'exams';
   info: {
@@ -930,6 +966,42 @@ export interface ApiExaminerExaminer extends Schema.CollectionType {
   };
 }
 
+export interface ApiFacultyFaculty extends Schema.CollectionType {
+  collectionName: 'faculties';
+  info: {
+    singularName: 'faculty';
+    pluralName: 'faculties';
+    displayName: 'Faculty';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.Text;
+    abbreviation: Attribute.String;
+    locations: Attribute.Relation<
+      'api::faculty.faculty',
+      'oneToMany',
+      'api::location.location'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::faculty.faculty',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::faculty.faculty',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiInstituteInstitute extends Schema.CollectionType {
   collectionName: 'institutes';
   info: {
@@ -945,8 +1017,6 @@ export interface ApiInstituteInstitute extends Schema.CollectionType {
     name: Attribute.String & Attribute.Required;
     abbreviation: Attribute.String;
     email: Attribute.Email;
-    faculty: Attribute.String;
-    city: Attribute.String;
     department: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -958,6 +1028,41 @@ export interface ApiInstituteInstitute extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::institute.institute',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiLocationLocation extends Schema.CollectionType {
+  collectionName: 'locations';
+  info: {
+    singularName: 'location';
+    pluralName: 'locations';
+    displayName: 'Location';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Attribute.String;
+    faculty: Attribute.Relation<
+      'api::location.location',
+      'manyToOne',
+      'api::faculty.faculty'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::location.location',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::location.location',
       'oneToOne',
       'admin::user'
     > &
@@ -979,7 +1084,11 @@ export interface ApiMajorMajor extends Schema.CollectionType {
   attributes: {
     name: Attribute.String & Attribute.Required;
     abbreviation: Attribute.String;
-    faculty: Attribute.String;
+    faculty: Attribute.Relation<
+      'api::major.major',
+      'oneToOne',
+      'api::faculty.faculty'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1050,6 +1159,7 @@ export interface ApiRoomRoom extends Schema.CollectionType {
     singularName: 'room';
     pluralName: 'rooms';
     displayName: 'Room';
+    description: '';
   };
   options: {
     draftAndPublish: false;
@@ -1058,9 +1168,13 @@ export interface ApiRoomRoom extends Schema.CollectionType {
     name: Attribute.String & Attribute.Required;
     building: Attribute.String;
     capacity: Attribute.Integer & Attribute.Required;
-    location: Attribute.String;
     isAvailable: Attribute.Boolean & Attribute.Required;
     exams: Attribute.Relation<'api::room.room', 'oneToMany', 'api::exam.exam'>;
+    location: Attribute.Relation<
+      'api::room.room',
+      'oneToOne',
+      'api::location.location'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::room.room', 'oneToOne', 'admin::user'> &
@@ -1084,8 +1198,8 @@ export interface ApiStudentStudent extends Schema.CollectionType {
   attributes: {
     first_name: Attribute.String & Attribute.Required;
     last_name: Attribute.String & Attribute.Required;
-    phone: Attribute.BigInteger;
-    emergency_contact: Attribute.BigInteger;
+    phone: Attribute.String;
+    emergency_contact: Attribute.String;
     matrikel_number: Attribute.String & Attribute.Required & Attribute.Unique;
     bonus_time: Attribute.Decimal;
     misc: Attribute.Text;
@@ -1099,6 +1213,28 @@ export interface ApiStudentStudent extends Schema.CollectionType {
       'api::student.student',
       'oneToOne',
       'plugin::users-permissions.user'
+    >;
+    conditions_approved: Attribute.Boolean;
+    in_distribution_list: Attribute.Enumeration<['Yes', 'No', 'Not anymore']>;
+    location: Attribute.Relation<
+      'api::student.student',
+      'oneToOne',
+      'api::location.location'
+    >;
+    disability: Attribute.Text;
+    presence_multimedia: Attribute.Enumeration<
+      ['Presence', 'Multimedia', 'Fernuni Hagen']
+    >;
+    updates: Attribute.Text;
+    disability_types: Attribute.Relation<
+      'api::student.student',
+      'manyToMany',
+      'api::disability-type.disability-type'
+    >;
+    faculty: Attribute.Relation<
+      'api::student.student',
+      'oneToOne',
+      'api::faculty.faculty'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -1133,12 +1269,23 @@ export interface ApiTutorTutor extends Schema.CollectionType {
     last_name: Attribute.String & Attribute.Required;
     phone: Attribute.BigInteger & Attribute.Required & Attribute.Unique;
     matrikel_number: Attribute.String & Attribute.Required & Attribute.Unique;
-    course: Attribute.String;
+    study: Attribute.String;
     user: Attribute.Relation<
       'api::tutor.tutor',
       'oneToOne',
       'plugin::users-permissions.user'
     >;
+    contract_type: Attribute.Enumeration<
+      ['Occasional', 'Secondary Employment']
+    >;
+    contract_completed: Attribute.Enumeration<['Yes', 'No', 'Not Necessary']>;
+    location: Attribute.Relation<
+      'api::tutor.tutor',
+      'oneToOne',
+      'api::location.location'
+    >;
+    salto_access: Attribute.Date;
+    distribution_list: Attribute.Enumeration<['Yes', 'No']>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1174,10 +1321,13 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::disability-type.disability-type': ApiDisabilityTypeDisabilityType;
       'api::exam.exam': ApiExamExam;
       'api::exam-mode.exam-mode': ApiExamModeExamMode;
       'api::examiner.examiner': ApiExaminerExaminer;
+      'api::faculty.faculty': ApiFacultyFaculty;
       'api::institute.institute': ApiInstituteInstitute;
+      'api::location.location': ApiLocationLocation;
       'api::major.major': ApiMajorMajor;
       'api::notification.notification': ApiNotificationNotification;
       'api::room.room': ApiRoomRoom;

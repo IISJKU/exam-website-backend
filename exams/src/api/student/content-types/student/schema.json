@@ -41,7 +41,12 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images", "files", "videos", "audios"]
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     },
     "major": {
       "type": "relation",
@@ -53,6 +58,47 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "student"
+    },
+    "conditions_approved": {
+      "type": "boolean"
+    },
+    "in_distribution_list": {
+      "type": "enumeration",
+      "enum": [
+        "Yes",
+        "No",
+        "Not anymore"
+      ]
+    },
+    "location": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::location.location"
+    },
+    "disability": {
+      "type": "text"
+    },
+    "presence_multimedia": {
+      "type": "enumeration",
+      "enum": [
+        "Presence",
+        "Multimedia",
+        "Fernuni Hagen"
+      ]
+    },
+    "updates": {
+      "type": "text"
+    },
+    "disability_types": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::disability-type.disability-type",
+      "inversedBy": "students"
+    },
+    "faculty": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::faculty.faculty"
     }
   }
 }

@@ -30,7 +30,7 @@
       "unique": true,
       "required": true
     },
-    "course": {
+    "study": {
       "type": "string"
     },
     "user": {
@@ -38,6 +38,36 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "tutor"
+    },
+    "contract_type": {
+      "type": "enumeration",
+      "enum": [
+        "Occasional",
+        "Secondary Employment"
+      ]
+    },
+    "contract_completed": {
+      "type": "enumeration",
+      "enum": [
+        "Yes",
+        "No",
+        "Not Necessary"
+      ]
+    },
+    "location": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::location.location"
+    },
+    "salto_access": {
+      "type": "date"
+    },
+    "distribution_list": {
+      "type": "enumeration",
+      "enum": [
+        "Yes",
+        "No"
+      ]
     }
   }
 }

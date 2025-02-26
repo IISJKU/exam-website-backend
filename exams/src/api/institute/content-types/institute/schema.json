@@ -22,12 +22,6 @@
     "email": {
       "type": "email"
     },
-    "faculty": {
-      "type": "string"
-    },
-    "city": {
-      "type": "string"
-    },
     "department": {
       "type": "string"
     }

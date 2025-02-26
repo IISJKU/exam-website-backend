@@ -4,7 +4,8 @@
   "info": {
     "singularName": "room",
     "pluralName": "rooms",
-    "displayName": "Room"
+    "displayName": "Room",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -22,9 +23,6 @@
       "type": "integer",
       "required": true
     },
-    "location": {
-      "type": "string"
-    },
     "isAvailable": {
       "type": "boolean",
       "required": true
@@ -34,6 +32,11 @@
       "relation": "oneToMany",
       "target": "api::exam.exam",
       "mappedBy": "room"
+    },
+    "location": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::location.location"
     }
   }
 }
