@@ -502,6 +502,11 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       fields: ["id"], // Retrieve only the exam IDs
     });
 
+    if (!entries || entries.length === 0) {
+      console.error("Entries are empty or undefined");
+      return ctx.notFound("No entries found for the user.");
+    }
+
     // @ts-ignore
     let entriesId = entries[0].id;
 
