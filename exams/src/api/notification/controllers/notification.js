@@ -90,7 +90,7 @@ module.exports = createCoreController("api::notification.notification", () => ({
 
     console.log(`notification error `, entries);
     // @ts-ignore
-    if (entries[0].id == undefined || entries[0] == null) return;
+    if (entries == [] || entries == null) return;
 
     // @ts-ignore
     let entriesId = entries[0].id;
