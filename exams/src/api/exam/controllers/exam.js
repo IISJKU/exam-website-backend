@@ -503,8 +503,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
     });
 
     if (!entries || entries.length === 0) {
-      console.error("Entries are empty or undefined");
-      return ctx.notFound("No entries found for the user.");
+      return null;
     }
 
     // @ts-ignore
