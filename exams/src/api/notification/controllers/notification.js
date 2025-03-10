@@ -88,6 +88,10 @@ module.exports = createCoreController("api::notification.notification", () => ({
       fields: ["id"], // Retrieve only the exam IDs
     });
 
+    console.log(`notification error `, entries);
+    // @ts-ignore
+    if (entries[0].id == undefined || entries[0] == null) return;
+
     // @ts-ignore
     let entriesId = entries[0].id;
 
