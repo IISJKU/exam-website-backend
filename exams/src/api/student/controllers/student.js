@@ -28,8 +28,8 @@ module.exports = createCoreController("api::student.student", ({ strapi }) => ({
       // attributes: {
       id: entry.id, // Embed the main entity's id into its attributes
       ...entry.attributes,
-      major: entry.attributes.major? embedIdInAttributes(entry.attributes.major.data): null,
-      major_id: entry.attributes.major ? entry.attributes.major.data.id : null,
+      major: entry.attributes.major.data ? embedIdInAttributes(entry.attributes.major.data): null,
+      major_id: entry.attributes.major.data ? entry.attributes.major.data.id : null,
       student_email: entry.attributes.user.data ? entry.attributes.user.data.attributes.email : null,
       location: entry.attributes.location.data ? embedIdInAttributes(entry.attributes.location.data) : null,
       faculty : entry.attributes.faculty.data ? embedIdInAttributes(entry.attributes.faculty.data) : null,
@@ -53,8 +53,8 @@ module.exports = createCoreController("api::student.student", ({ strapi }) => ({
       //attributes: {
       id: data.id, // Embed the main entity's id into its attributes
       ...data.attributes,
-      major: data.attributes.major ? embedIdInAttributes(data.attributes.major.data): null,
-      major_id: data.attributes.major ? data.attributes.major.data.id : null,
+      major: data.attributes.major.data ? embedIdInAttributes(data.attributes.major.data): null,
+      major_id: data.attributes.major.data ? data.attributes.major.data.id : null,
       location: data.attributes.location.data ? embedIdInAttributes(data.attributes.location.data) : null,
       faculty : data.attributes.faculty.data ? embedIdInAttributes(data.attributes.faculty.data) : null,
       disability_types: data.attributes.disability_types && data.attributes.disability_types.data ? data.attributes.disability_types.data.map(embedIdInAttributes) : [],
@@ -80,7 +80,7 @@ module.exports = createCoreController("api::student.student", ({ strapi }) => ({
       major: data.attributes.major
         ? embedIdInAttributes(data.attributes.major.data)
         : null,
-      major_id: data.attributes.major ? data.attributes.major.data.id : null,
+      major_id: data.attributes.major.data ? data.attributes.major.data.id : null,
       location: data.attributes.location.data ? embedIdInAttributes(data.attributes.location.data) : null,
       faculty : data.attributes.faculty.data ? embedIdInAttributes(data.attributes.faculty.data) : null,
       disability_types: data.attributes.disability_types && data.attributes.disability_types.data ? data.attributes.disability_types.data.map(embedIdInAttributes) : [],
