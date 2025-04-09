@@ -90,7 +90,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       major:
         entry.attributes.student &&
         entry.attributes.student.data &&
-        entry.attributes.student.data.attributes.major
+        entry.attributes.student.data.attributes.major.data
           ? embedIdInAttributes(
               entry.attributes.student.data.attributes.major.data
             )
@@ -114,7 +114,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       major_id:
         entry.attributes.student &&
         entry.attributes.student.data &&
-        entry.attributes.student.data.attributes.major
+        entry.attributes.student.data.attributes.major.data
           ? entry.attributes.student.data.attributes.major.data.id
           : null,
       student_email:
@@ -225,7 +225,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       major:
         data.attributes.student &&
         data.attributes.student.data &&
-        data.attributes.student.data.attributes.major
+        data.attributes.student.data.attributes.major.data
           ? embedIdInAttributes(
               data.attributes.student.data.attributes.major.data
             )
@@ -249,7 +249,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       major_id:
         data.attributes.student &&
         data.attributes.student.data &&
-        data.attributes.student.data.attributes.major
+        data.attributes.student.data.attributes.major.data
           ? data.attributes.student.data.attributes.major.data.id
           : null,
       student_email:
@@ -381,7 +381,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       major:
         data.attributes.student &&
         data.attributes.student.data &&
-        data.attributes.student.data.attributes.major
+        data.attributes.student.data.attributes.major.data
           ? embedIdInAttributes(
               data.attributes.student.data.attributes.major.data
             )
@@ -405,7 +405,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
       major_id:
         data.attributes.student &&
         data.attributes.student.data &&
-        data.attributes.student.data.attributes.major
+        data.attributes.student.data.attributes.major.data
           ? data.attributes.student.data.attributes.major.data.id
           : null,
       student_email:

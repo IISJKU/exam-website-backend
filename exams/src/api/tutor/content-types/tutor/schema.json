@@ -22,13 +22,13 @@
     },
     "phone": {
       "type": "biginteger",
-      "required": true,
+      "required": false,
       "unique": true
     },
     "matrikel_number": {
       "type": "string",
       "unique": true,
-      "required": true
+      "required": false
     },
     "study": {
       "type": "string"
@@ -52,7 +52,8 @@
         "Yes",
         "No",
         "Not Necessary"
-      ]
+      ],
+      "default": "No"
     },
     "location": {
       "type": "relation",
