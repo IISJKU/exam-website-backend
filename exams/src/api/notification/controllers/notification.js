@@ -69,6 +69,80 @@ module.exports = createCoreController("api::notification.notification", () => ({
 
     return formattedNotification;
   },
+  async findMyCreatedExams(ctx) {
+    const name = ctx.state.user.username;
+
+    const notifications = await strapi.entityService.findMany(
+      "api::notification.notification",
+      {
+        filters: {
+          sentBy: name,
+          type: "createExam",
+        },
+        populate: {
+          createdBy: true,
+          updatedBy: true,
+        },
+      }
+    );
+
+    //aufbereitung
+
+    let exams = [];
+
+    for (const notif of notifications) {
+      if (notif.information) {
+        let info = JSON.parse(notif.information);
+
+        const examiner = info.examiner_id
+          ? await strapi.entityService.findOne(
+              "api::examiner.examiner",
+              info.examiner_id,
+              {
+                populate: "*",
+              }
+            )
+          : null;
+
+        const mode = info.exam_mode
+          ? await strapi.entityService.findOne(
+              "api::exam-mode.exam-mode",
+              info.exam_mode,
+              {
+                populate: "*",
+              }
+            )
+          : null;
+
+        console.log(info);
+
+        /*  
+      match major to id!!!!!!!!!
+          console.log(notifications);
+
+
+
+
+
+
+      */
+
+        let exam = {
+          title: info.title,
+          duration: info.duration,
+          lva_num: info.lva_num,
+          examiner: examiner.first_name + " " + examiner.last_name,
+          date: info.date,
+          institute: "",
+          exam_mode: mode.name,
+        };
+
+        exams.push(exam);
+      }
+    }
+
+    return exams;
+  },
 
   async findMyNotifications(ctx) {
     const userId = ctx.state.user.id;
@@ -87,9 +161,9 @@ module.exports = createCoreController("api::notification.notification", () => ({
       },
       fields: ["id"], // Retrieve only the exam IDs
     });
-    
+
     // @ts-ignore
-    let entriesId = entries[0].id;    
+    let entriesId = entries[0].id;
 
     let filter = {
       student: { id: entriesId },
