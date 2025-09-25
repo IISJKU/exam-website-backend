@@ -27,7 +27,7 @@ module.exports = createCoreController('api::room.room', ({ strapi }) => ({
           id: entry.id, // Embed the main entity's id into its attributes
         ...entry.attributes,
         exams: entry.attributes.exams && entry.attributes.exams.data ? entry.attributes.exams.data.map(embedIdInAttributes) : [],
-
+        location: entry.attributes.location?.data  ? embedIdInAttributes(entry.attributes.location.data) : null,
         //},
       }));
   
@@ -53,7 +53,7 @@ module.exports = createCoreController('api::room.room', ({ strapi }) => ({
           id: data.id,  // Embed the main entity's id into its attributes
         ...data.attributes,
         exams: data.attributes.exams && data.attributes.exams.data ? data.attributes.exams.data.map(embedIdInAttributes) : [],
-
+        location: data.attributes.location?.data  ? embedIdInAttributes(data.attributes.location.data) : null,
          //},
      };
       return newData;
@@ -77,6 +77,7 @@ module.exports = createCoreController('api::room.room', ({ strapi }) => ({
           id: data.id,  // Embed the main entity's id into its attributes
         ...data.attributes,
         exams: data.attributes.exams && data.attributes.exams.data ? data.attributes.exams.data.map(embedIdInAttributes) : [],
+        location: data.attributes.location?.data  ? embedIdInAttributes(data.attributes.location.data) : null,
          //},
      };
       return newData;

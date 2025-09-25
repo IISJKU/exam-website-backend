@@ -40,10 +40,6 @@
       "target": "api::examiner.examiner",
       "inversedBy": "exams"
     },
-    "lva_num": {
-      "type": "decimal",
-      "required": true
-    },
     "notes": {
       "type": "string"
     },
@@ -83,6 +79,11 @@
       ],
       "default": "Email Examiner Needed",
       "required": false
+    },
+    "lva_num": {
+      "type": "string",
+      "regex": "^[0-9]+([.][0-9]+)?$",
+      "required": true
     }
   }
 }

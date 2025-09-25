@@ -860,7 +860,6 @@ export interface ApiExamExam extends Schema.CollectionType {
       'manyToOne',
       'api::examiner.examiner'
     >;
-    lva_num: Attribute.Decimal & Attribute.Required;
     notes: Attribute.String;
     exam_mode: Attribute.Relation<
       'api::exam.exam',
@@ -889,6 +888,7 @@ export interface ApiExamExam extends Schema.CollectionType {
       ]
     > &
       Attribute.DefaultTo<'Email Examiner Needed'>;
+    lva_num: Attribute.String & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::exam.exam', 'oneToOne', 'admin::user'> &
