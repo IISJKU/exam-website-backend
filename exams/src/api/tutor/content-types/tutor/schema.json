@@ -21,7 +21,7 @@
       "required": true
     },
     "phone": {
-      "type": "biginteger",
+      "type": "string",
       "required": false,
       "unique": true
     },
@@ -41,18 +41,11 @@
     },
     "contract_type": {
       "type": "enumeration",
-      "enum": [
-        "Occasional",
-        "Secondary Employment"
-      ]
+      "enum": ["Occasional", "Secondary Employment"]
     },
     "contract_completed": {
       "type": "enumeration",
-      "enum": [
-        "Yes",
-        "No",
-        "Not Necessary"
-      ],
+      "enum": ["Yes", "No", "Not Necessary"],
       "default": "No"
     },
     "location": {
@@ -65,10 +58,11 @@
     },
     "distribution_list": {
       "type": "enumeration",
-      "enum": [
-        "Yes",
-        "No"
-      ]
+      "enum": ["Yes", "No"]
+    },
+    "email": {
+      "type": "email",
+      "required": false
     }
   }
 }

@@ -11,6 +11,8 @@ Icon
 ._*
 
 
+
+
 ############################
 # Linux
 ############################
@@ -87,6 +89,7 @@ public/uploads/*
 # Node.js
 ############################
 
+
 lib-cov
 lcov.info
 pids
@@ -113,3 +116,6 @@ dist
 build
 .strapi-updater.json
 .strapi-cloud.json
+
+
+*.xlsx

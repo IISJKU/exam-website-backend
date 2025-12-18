@@ -1236,6 +1236,7 @@ export interface ApiStudentStudent extends Schema.CollectionType {
       'oneToOne',
       'api::faculty.faculty'
     >;
+    email: Attribute.Email;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1267,7 +1268,7 @@ export interface ApiTutorTutor extends Schema.CollectionType {
   attributes: {
     first_name: Attribute.String & Attribute.Required;
     last_name: Attribute.String & Attribute.Required;
-    phone: Attribute.BigInteger & Attribute.Unique;
+    phone: Attribute.String & Attribute.Unique;
     matrikel_number: Attribute.String & Attribute.Unique;
     study: Attribute.String;
     user: Attribute.Relation<
@@ -1287,6 +1288,7 @@ export interface ApiTutorTutor extends Schema.CollectionType {
     >;
     salto_access: Attribute.Date;
     distribution_list: Attribute.Enumeration<['Yes', 'No']>;
+    email: Attribute.Email;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

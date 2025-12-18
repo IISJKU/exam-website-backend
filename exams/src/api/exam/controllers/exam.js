@@ -6,6 +6,8 @@
 
 const { createCoreController } = require("@strapi/strapi").factories;
 
+const Excel = require("exceljs");
+
 module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
   // Override the default find method
   async find(ctx) {
@@ -659,8 +661,6 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
         }
       );
 
-      console.log("All Tutors Data:", allTutors);
-
       // Return the data (optional)
       return allTutors;
     } catch (error) {
@@ -849,5 +849,510 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
     }
 
     return updatedExam;
+  },
+
+  async importExcel(ctx) {
+    try {
+      const req = ctx.request;
+      const files = req.files;
+      const uploaded = files?.file;
+
+      if (!uploaded) {
+        return ctx.badRequest('No file uploaded. Expecting form field "file".');
+      }
+
+      const file = Array.isArray(uploaded) ? uploaded[0] : uploaded;
+      const filePath = file.filepath || file.path;
+
+      if (!filePath) {
+        return ctx.badRequest("Couldn't resolve uploaded file path.");
+      }
+
+      // ----- PRELOAD STUDENTS (for matching) -----
+      const allStudents = await strapi.entityService.findMany(
+        "api::student.student",
+        {
+          fields: ["id", "matrikel_number", "first_name", "last_name"],
+          limit: 10000,
+        }
+      );
+
+      const studentByMatrikel = {};
+      const studentByName = {};
+
+      allStudents.forEach((s) => {
+        if (s.matrikel_number) {
+          const key = String(s.matrikel_number).trim();
+          studentByMatrikel[key] = s.id;
+        }
+        if (s.first_name && s.last_name) {
+          const nameKey = (s.first_name + " " + s.last_name)
+            .toLowerCase()
+            .trim();
+          studentByName[nameKey] = s.id;
+        }
+      });
+
+      // ----- PRELOAD STUDENTS (for matching) -----
+      const allTutors = await strapi.entityService.findMany(
+        "api::tutor.tutor",
+        {
+          fields: ["id", "phone", "first_name", "last_name"],
+          limit: 10000,
+        }
+      );
+
+      const tutorByName = {};
+      const tutorByPhone = {};
+
+      allTutors.forEach((s) => {
+        if (s.phone) {
+          const key = String(s.phone).trim();
+          tutorByPhone[key] = s.id;
+        }
+        if (s.first_name && s.last_name) {
+          const nameKey = (s.first_name + " " + s.last_name)
+            .toLowerCase()
+            .trim();
+          tutorByName[nameKey] = s.id;
+        }
+      });
+
+      // ----- Examiners -----
+      const examiners = {};
+
+      const allExaminers = await strapi.entityService.findMany(
+        "api::examiner.examiner",
+        {
+          fields: ["id", "first_name", "last_name"],
+          limit: 10000,
+        }
+      );
+
+      allExaminers.forEach((s) => {
+        if (s.first_name && s.last_name) {
+          const nameKey = (s.first_name + " " + s.last_name)
+            .toLowerCase()
+            .trim();
+          examiners[nameKey] = s.id;
+        }
+      });
+
+      // ----- Mode map -----
+      const modeMap = {};
+      const allModes = await strapi.entityService.findMany(
+        "api::exam-mode.exam-mode",
+        {
+          fields: ["id", "name"],
+          limit: 1000,
+        }
+      );
+
+      allModes.forEach((entr) => (modeMap[entr.name?.toLowerCase()] = entr.id));
+
+      console.log(modeMap);
+
+      // ----- Location map -----
+      const allRooms = await strapi.entityService.findMany("api::room.room", {
+        fields: ["id", "name"],
+        limit: 1000,
+      });
+      const roomMap = {};
+      allRooms.forEach((room) => (roomMap[room.name?.toLowerCase()] = room.id));
+
+      console.log(roomMap);
+
+      const workbook = new Excel.Workbook();
+      await workbook.xlsx.readFile(filePath);
+
+      // you were using sheet index 2 before, keep that:
+      const sheet = workbook.worksheets[1];
+      if (!sheet) {
+        return ctx.badRequest("Excel has no sheet at index 1");
+      }
+
+      const headerRow = sheet.getRow(1);
+      const headers = headerRow.values;
+
+      const createdExams = [];
+      const updatedExams = [];
+      const skippedRows = [];
+
+      for (let rowNumber = 2; rowNumber <= sheet.actualRowCount; rowNumber++) {
+        const row = sheet.getRow(rowNumber);
+
+        // skip fully empty rows
+        if (
+          !row ||
+          row.values.filter((v) => v !== null && v !== undefined && v !== "")
+            .length === 0
+        ) {
+          continue;
+        }
+
+        // Build a plain row object from headers
+        const rowObj = {};
+        headers.forEach((header, colIndex) => {
+          if (typeof header === "string" && header.trim() !== "") {
+            const cell = row.getCell(colIndex);
+            let value = cell.value;
+
+            if (value && typeof value === "object" && "text" in value) {
+              value = value.text;
+            }
+
+            rowObj[header] = value;
+          }
+        });
+
+        // break condition (as you had)
+
+        /*
+          if (
+            !(
+              (rowObj["Vorname"] == "Außenstandorte" ||
+                rowObj["Vorname"] ==
+                  "Freie Dienstnehmer bzw. besondere Regelungen") &&
+              (!rowObj["Familienname"] || rowObj["Familienname"] == "")
+            )
+          )
+            continue; */
+
+        // Row color from first cell
+        let color = null;
+        const firstCell = row.getCell(1);
+        if (firstCell.fill?.fgColor) {
+          const fg = firstCell.fill.fgColor;
+          color = fg.argb || fg.theme || null;
+        }
+
+        if (color == "1" || color == 1) {
+          //continue;
+        }
+
+        //match student
+
+        // ------------- STUDENT MATCHING -------------
+        // assume Excel has:
+        //   "Matrikel Nr."      -> matrikel number
+        //   "Studierende"       -> "FirstName LastName"
+
+        let rawStudentField = rowObj["KandidatIn"];
+
+        let studentId = null;
+
+        if (rawStudentField && rawStudentField != "") {
+          let studentNameRaw = rawStudentField.split(" (")[0].trim();
+
+          let matrikelRaw = "";
+
+          if (rawStudentField.split(" (")[1]) {
+            matrikelRaw = rawStudentField.split(" (")[1].replaceAll(")", "");
+          }
+
+          // 1) try by matrikel number
+          if (matrikelRaw) {
+            const matrikelKey = String(matrikelRaw).trim();
+            studentId = studentByMatrikel[matrikelKey] || null;
+          }
+
+          // 2) if no matrikel match, try by first + last name
+          if (!studentId && studentNameRaw) {
+            const nameStr = String(studentNameRaw).trim();
+            const parts = nameStr.split(/\s+/);
+            let firstNameGuess = "";
+            let lastNameGuess = "";
+
+            if (parts.length === 1) {
+              lastNameGuess = parts[0];
+            } else if (parts.length > 1) {
+              lastNameGuess = parts[parts.length - 1];
+              firstNameGuess = parts.slice(0, -1).join(" ");
+            }
+
+            const nameKey = (firstNameGuess + " " + lastNameGuess)
+              .toLowerCase()
+              .trim();
+            if (nameKey) {
+              studentId = studentByName[nameKey] || null;
+            }
+            //maybe its upsidedown
+            if (!studentId || studentId == null)
+              studentId =
+                studentByName[
+                  (lastNameGuess + " " + firstNameGuess).toLowerCase().trim()
+                ] || null;
+          }
+
+          // If still no match, skip this exam
+          if (!studentId) {
+            const nameStr = String(studentNameRaw).trim();
+            const parts = nameStr.split(/\s+/);
+            let firstNameGuess = "";
+            let lastNameGuess = "";
+
+            if (parts.length === 1) {
+              lastNameGuess = parts[0];
+            } else if (parts.length > 1) {
+              lastNameGuess = parts[parts.length - 1];
+              firstNameGuess = parts.slice(0, -1).join(" ");
+            }
+
+            // if no matrikel present, generate a temporary one
+            let matrikelKey = "";
+            if (matrikelRaw) {
+              matrikelKey = String(matrikelRaw).trim();
+
+              if (!matrikelKey || matrikelKey == "") {
+                matrikelKey = `TEMP-${rowNumber}-${Date.now()}`;
+              }
+
+              const studentData = {
+                first_name: firstNameGuess,
+                last_name: lastNameGuess,
+                matrikel_number: matrikelKey,
+              };
+
+              const newStudent = await strapi.entityService.create(
+                "api::student.student",
+                { data: studentData }
+              );
+
+              studentId = newStudent.id;
+
+              // update maps so later rows can reuse
+              studentByMatrikel[matrikelKey] = studentId;
+              const nameKey = (
+                firstNameGuess.trim() +
+                "|" +
+                lastNameGuess.trim()
+              ).toLowerCase();
+              studentByName[nameKey] = studentId;
+            }
+          }
+        }
+
+        //////////////////////////////////
+        // examiner stuff
+
+        let profId;
+
+        if (
+          rowObj["ProfIn"] &&
+          rowObj["ProfIn"] != "" &&
+          typeof rowObj["ProfIn"] == "string"
+        ) {
+          let prof = rowObj["ProfIn"].normalize("NFC");
+
+          let seperators = [",", ";", "/", "("];
+
+          seperators.forEach((s) => {
+            if (prof.includes(s)) {
+              prof = prof.substring(0, prof.indexOf(s));
+            }
+          });
+
+          let replaceWords = [
+            "Dr",
+            "Dr.",
+            "Frau",
+            "Univ.-Prof.",
+            "Herr",
+            "Fr",
+            "Fr.",
+            "Hr",
+            "Prof.",
+            "Profin.",
+            "Prof.in",
+          ];
+          replaceWords.forEach((w) => {
+            prof = prof.replaceAll(w + " ", "");
+          });
+
+          prof = prof.trim();
+
+          if (examiners[prof.toLowerCase()]) {
+            profId = examiners[prof.toLowerCase()];
+          }
+
+          if (isNaN(profId) || !profId) {
+            let names = prof.split(" ");
+            let pFirstName = "";
+            let pLastName = "";
+
+            if (names.length == 1) pLastName = names[0];
+            if (names.length > 1) {
+              pFirstName = names[0];
+
+              for (var i = 1; i < names.length; i++) {
+                if (i == 1) pLastName = names[i];
+                else pLastName = pLastName + " " + names[i];
+              }
+
+              pLastName.trim();
+            }
+
+            const profData = {
+              first_name: pFirstName,
+              last_name: pLastName,
+            };
+
+            const newProf = await strapi.entityService.create(
+              "api::examiner.examiner",
+              { data: profData }
+            );
+
+            examiners[(pFirstName + " " + pLastName).toLowerCase()] =
+              newProf.id;
+
+            profId = newProf.id;
+          }
+        }
+
+        //////////////////////////////////
+        //format examthings
+        let title = rowObj["LVA-Titel"];
+        if (title["richText"] && title["richText"] != "") {
+          title = title["richText"][0]["text"];
+        }
+        let notes = rowObj["Status"];
+        let dur = Number(rowObj["Dauer (min)"]);
+        if (isNaN(dur)) dur = 0;
+        let date = rowObj["Datum"];
+
+        if (date) {
+          date = new Date(date);
+          if (rowObj["Startzeit"]) {
+            const excelDate = new Date(rowObj["Startzeit"]);
+
+            const hours = excelDate.getUTCHours();
+            const minutes = excelDate.getUTCMinutes();
+            const seconds = excelDate.getUTCSeconds();
+
+            date = date.setHours(hours, minutes, seconds);
+          }
+
+          date = new Date(date);
+        } else {
+          date = new Date(null);
+        }
+
+        let rawMode = rowObj["Raum/Ort/Prüfungsart"];
+        let mode;
+        let room;
+
+        if (rawMode && rawMode != "") {
+          rawMode = rawMode.toLowerCase();
+
+          //console.log(rawMode + " i go here");
+          if (
+            rawMode.includes("hf1") ||
+            rawMode.includes("präsenz") ||
+            rawMode.includes("regulär") ||
+            rawMode.includes("linz") ||
+            rawMode.includes("wien") ||
+            rawMode.includes("bregenz")
+          ) {
+            mode = modeMap["present"];
+          }
+
+          if (rawMode.includes("moodle")) {
+            mode = modeMap["moodle"];
+          }
+
+          if (
+            rawMode.includes("online") ||
+            rawMode.includes("zuhause") ||
+            rawMode.includes("zoom")
+          ) {
+            mode = modeMap["online"];
+          }
+
+          if (rawMode.includes("hf135") || rawMode.includes("hf 135"))
+            room = roomMap["hf 135"];
+          if (rawMode.includes("hf104") || rawMode.includes("hf 104"))
+            room = roomMap["hf 104"];
+          if (rawMode.includes("hf134") || rawMode.includes("hf 134"))
+            room = roomMap["hf 134"];
+        }
+
+        let lvaNum = rowObj["LVA-NR"];
+        if (lvaNum && lvaNum != "") {
+          lvaNum = lvaNum + "";
+        } else lvaNum = "0";
+
+        lvaNum = lvaNum.trim();
+
+        if (lvaNum == "-") lvaNum = "0";
+
+        //tutor
+        let tutorId;
+
+        if (
+          rowObj["TutorIn"] &&
+          rowObj["TutorIn"].trim().toLowerCase() != "nicht notwendig"
+        ) {
+          let raw = rowObj["TutorIn"].trim().toLowerCase();
+
+          if (raw.includes("("))
+            raw = raw.substring(0, raw.indexOf("(")).trim();
+
+          if (raw == "david") raw = "david kühhas";
+
+          tutorId = tutorByName[raw];
+        }
+
+        const examData = {
+          title: title || "",
+          notes: notes || "",
+          duration: dur || 0,
+          date: date || null,
+          tutor: tutorId || null,
+          lva_num: lvaNum || "",
+          student: studentId,
+          exam_mode: mode || null,
+          room: room || null,
+          examiner: profId || null,
+        };
+
+        // ----- UPSERT: prefer matrikel; if none, use phone -----
+        let existing = [];
+        if (examData.title) {
+          existing = await strapi.entityService.findMany("api::exam.exam", {
+            filters: { title: title },
+            limit: 1,
+          });
+        }
+
+        if (existing.length > 0) {
+          const updated = await strapi.entityService.update(
+            "api::exam.exam",
+            existing[0].id,
+            { data: examData }
+          );
+          updatedExams.push(updated.id);
+        } else {
+          const created = await strapi.entityService.create("api::exam.exam", {
+            data: examData,
+          });
+          createdExams.push(created.id);
+        }
+      }
+
+      console.log(
+        "==================================================================="
+      );
+
+      return ctx.send({
+        message: "Exams import finished (UPSERT)",
+        file: file.name,
+        created: createdExams.length,
+        updated: updatedExams.length,
+        skippedRows,
+      });
+    } catch (err) {
+      console.error("Error importing exams:", err);
+      return ctx.internalServerError("Failed to import exams from Excel");
+    }
   },
 }));

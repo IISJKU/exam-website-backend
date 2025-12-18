@@ -41,12 +41,7 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
+      "allowedTypes": ["images", "files", "videos", "audios"]
     },
     "major": {
       "type": "relation",
@@ -64,11 +59,7 @@
     },
     "in_distribution_list": {
       "type": "enumeration",
-      "enum": [
-        "Yes",
-        "No",
-        "Not anymore"
-      ]
+      "enum": ["Yes", "No", "Not anymore"]
     },
     "location": {
       "type": "relation",
@@ -80,11 +71,7 @@
     },
     "presence_multimedia": {
       "type": "enumeration",
-      "enum": [
-        "Presence",
-        "Multimedia",
-        "Fernuni Hagen"
-      ]
+      "enum": ["Presence", "Multimedia", "Fernuni Hagen"]
     },
     "updates": {
       "type": "text"
@@ -99,6 +86,9 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::faculty.faculty"
+    },
+    "email": {
+      "type": "email"
     }
   }
 }

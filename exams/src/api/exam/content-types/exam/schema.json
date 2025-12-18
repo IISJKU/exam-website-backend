@@ -82,7 +82,6 @@
     },
     "lva_num": {
       "type": "string",
-      "regex": "^[0-9]+([.][0-9]+)?$",
       "required": true
     }
   }

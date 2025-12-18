@@ -43,5 +43,15 @@ module.exports = {
         policies: [],
       },
     },
+    {
+      method: "POST",
+      path: "/exams/import-excel",
+      handler: "exam.importExcel",
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+      },
+    },
   ],
 };
