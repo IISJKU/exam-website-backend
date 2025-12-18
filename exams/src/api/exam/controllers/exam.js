@@ -1006,6 +1006,15 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
         });
 
         if (rowObj["LVA-Titel"] == null) break;
+        if (
+          rowObj["Datum"] &&
+          new Date(rowObj["Datum"]) < new Date("2025-12-17")
+        ) {
+          continue;
+        }
+
+        console.log(new Date(rowObj["Datum"]) < new Date("2025-12-17"));
+        console.log(rowObj["Datum"]);
 
         // break condition (as you had)
 
@@ -1322,7 +1331,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
         let existing = [];
         if (examData.title) {
           existing = await strapi.entityService.findMany("api::exam.exam", {
-            filters: { title: title },
+            filters: { title: title, student: studentId },
             limit: 1,
           });
         }
