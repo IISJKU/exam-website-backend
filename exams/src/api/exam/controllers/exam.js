@@ -1214,7 +1214,7 @@ module.exports = createCoreController("api::exam.exam", ({ strapi }) => ({
         //////////////////////////////////
         //format examthings
         let title = rowObj["LVA-Titel"];
-        console.log(rowObj);
+
         if (title["richText"] && title["richText"] != "") {
           title = title["richText"][0]["text"];
         }
